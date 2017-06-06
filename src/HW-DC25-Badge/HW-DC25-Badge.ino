@@ -20,9 +20,9 @@
 #include "_fonts/channels.c"
 #include "_fonts/defaultFont.c"
 
+#include "apscanner.h"
 #include "blinky.h"
 #include "core.h"
-
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
@@ -155,18 +155,6 @@ void LEFT(){
   counter ++;
   id = 4;
   last_micros = micros();
-  }
-}
-
-//AP Scanner
-void Scanner(){
-  int n = WiFi.scanNetworks();
-  mydisp.clearScreen();
-  for (int i=0; i<n; i++){
-    int x = random(0,65535);
-    String Name = WiFi.SSID(i);
-    mydisp.setTextColor(x);
-    mydisp.println(Name);
   }
 }
 
