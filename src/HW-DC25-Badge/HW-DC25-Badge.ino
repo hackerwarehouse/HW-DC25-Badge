@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <qMenuDisplay.h>
 #include <qMenuSystem.h>
+
 #include "TestMenu.h"
 #include "_images/badge.c"
 #include "_images/hacker.c"
@@ -19,11 +20,9 @@
 #include "_fonts/channels.c"
 #include "_fonts/defaultFont.c"
 
-#define ESP8266
-#define _CS  4
-#define _DC  5
-#define PIN            9
-#define NUMPIXELS      14
+#include "blinky.h"
+#include "core.h"
+
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
@@ -46,12 +45,9 @@ unsigned long last_micros = 0;
 unsigned long prevMillis = 0;
 
 int delayval = 500;
-int pos = 0, dir = 1;
 int chn [13];
 int mult = 5;
-int del = 100;
 
-bool state = false;
 bool flag = true;
 
 class Flasher
@@ -160,94 +156,6 @@ void LEFT(){
   id = 4;
   last_micros = micros();
   }
-}
-
-//Random Blinking 
-void LED1(){
-  int x = random(0,255); 
-  int y = random(0,255);
-  int z = random(0,255);
-  if(state == false){
-    state = true;
-    for(int i=0;i<NUMPIXELS;i++){
-      pixels.setPixelColor(i, pixels.Color(x,y,z)); 
-      pixels.show(); 
-    }
-    delay(500);  
-  }
-   else if(state == true){
-    state = false;
-    turn_off();
-    delay(500);  
-  } 
-}
-
-//Larson Scanner
-void LED2(){
-  int j;
-  pixels.setPixelColor(pos - 1, 0xFF3000); // Medium red
-  pixels.setPixelColor(pos    , 0x800000); // Center pixel is brightest
-  pixels.setPixelColor(pos + 1, 0xFF3000 ); // Medium red
-  pixels.show();
-  delay(30);
- 
-  for(j=-2; j<= 2; j++) pixels.setPixelColor(pos+j, 0);
- 
-  pos += dir;
-  if(pos < 0) {
-    pos = 1;
-    dir = -dir;
-  } else if(pos >= pixels.numPixels()) {
-    pos = pixels.numPixels() - 2;
-    dir = -dir;
-  }
-}
-
-//LED Chase
-void LED3(){
-  for (int i=0; i<NUMPIXELS; i++){
-    if(counter > 0){
-      break;
-    }
-    else if(i==0){
-      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
-    }
-    else{
-      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
-      pixels.setPixelColor(i-1, pixels.Color(0,0,0));      
-    }
-    pixels.show();
-    delay(del);
-  }
-  pixels.setPixelColor(13, pixels.Color(0,0,0));
-  pixels.show();
-  delay(del);
-
-  for (int i=13; i>-1; i--){
-    if(counter > 0){
-      break;
-    }
-    else if (i==13){
-      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
-    }
-    else{
-      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
-      pixels.setPixelColor(i+1, pixels.Color(0,0,0));
-    }
-    pixels.show();
-    delay(del);
-  }
-  pixels.setPixelColor(0, pixels.Color(0,0,0));
-  pixels.show();
-  delay(del);
-}
-
-//Flashlight 
-void LED4(){
-  for(int i=0;i<NUMPIXELS;i++){
-    pixels.setPixelColor(i, pixels.Color(255,255,255)); 
-    pixels.show(); 
-  } 
 }
 
 //AP Scanner
@@ -655,7 +563,7 @@ void loop()
         mydisp.print("Godai Group");
         mydisp.drawImage(1, 48, &garret);
         mydisp.setCursor(17, 52);
-        mydisp.print("Garret Gee");
+        mydisp.print("Garrett Gee 2");
         
           break;
         case 2:
