@@ -41,11 +41,10 @@ volatile byte id  = 0;
 //long interval1 = 500;
 //unsigned long prevMillis = 0;
 //int delayval = 500;
+//bool flag = true;
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
-
-bool flag = true;
 
 enum Tasks {Null,
             Random,
