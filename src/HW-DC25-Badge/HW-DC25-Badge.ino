@@ -36,14 +36,14 @@ const byte up = 0;
 volatile byte counter = 0;
 volatile byte id  = 0;
 
+//cant find where used
+//long interavl = 250;
+//long interval1 = 500;
+//unsigned long prevMillis = 0;
+//int delayval = 500;
+
 long debouncing_time = 250;
-long interavl = 250;
-long interval1 = 500;
-
 unsigned long last_micros = 0;
-unsigned long prevMillis = 0;
-
-int delayval = 500;
 
 bool flag = true;
 
