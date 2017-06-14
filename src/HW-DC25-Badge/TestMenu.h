@@ -13,11 +13,11 @@ static const char PROGMEM itmRoot[] = "Main Menu";
 
 static const char PROGMEM itmSubmenu1[] = "Channel Activity";
 static const char PROGMEM itmItem1[] = "LED Chn Activity";
-static const char PROGMEM itmItem2[] = "Logo";
+static const char PROGMEM itmItem2[] = "Display Artwork";
 
 static const char PROGMEM itmSubmenu2[] = "Customization";
-static const char PROGMEM itmItem3[] = "Nick/Alias";
-static const char PROGMEM itmItem4[] = "Artwork";
+static const char PROGMEM itmItem3[] = "Set Nick/Alias";
+static const char PROGMEM itmItem4[] = "Set Artwork";
 
 static const char PROGMEM itmSubmenu3[] = "AP Scanner";
 static const char PROGMEM itmItem5[] = "SSID List";
