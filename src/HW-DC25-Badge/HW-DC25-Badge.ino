@@ -10,19 +10,20 @@
 #include <SPI.h>
 #include <qMenuDisplay.h>
 #include <qMenuSystem.h>
-
 #include "TestMenu.h"
 #include "_images/badge.c"
 #include "_images/hacker.c"
 #include "_images/godai.c"
 #include "_images/js.c"
 #include "_images/garret.c"
+#include "_fonts/channels.c"
 #include "_fonts/defaultFont.c"
 
-#include "apscanner.h"
-#include "blinky.h"
-#include "channelactivity.h"
-#include "core.h"
+#define ESP8266
+#define _CS  4
+#define _DC  5
+#define PIN            9
+#define NUMPIXELS      14
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
@@ -36,15 +37,80 @@ const byte up = 0;
 volatile byte counter = 0;
 volatile byte id  = 0;
 
-//cant find where used
-//long interavl = 250;
-//long interval1 = 500;
-//unsigned long prevMillis = 0;
-//int delayval = 500;
-//bool flag = true;
-
 long debouncing_time = 250;
+long interavl = 250;
+long interval1 = 500;
+long times [13];
+
 unsigned long last_micros = 0;
+unsigned long prevMillis = 0;
+
+int delayval = 500;
+int pos = 0, dir = 1;
+int chn [13];
+int mult = 5;
+int del = 100;
+
+bool state = false;
+bool flag = true;
+
+class Flasher
+{
+  // Class Member Variables
+  // These are initialized at startup
+  int ledPin;      // the number of the LED pin
+  long OnTime;     // milliseconds of on-time
+  long OffTime;    // milliseconds of off-time
+  
+  // These maintain the current state
+  bool ledState;                 // ledState used to set the LED
+  unsigned long previousMillis;   // will store last time LED was updated
+ 
+  // Constructor - creates a Flasher 
+  // and initializes the member variables and state
+  public:
+  Flasher(int pin, long ON, long OFF)
+  {
+  ledPin = pin;     
+    
+  OnTime = ON;
+  OffTime = OFF;
+  
+  ledState = false; 
+  previousMillis = 0;
+  }
+ 
+  void Update()
+  {
+    // check to see if it's time to change the state of the LED
+    unsigned long currentMillis = millis();
+     
+    if((ledState == true) && (currentMillis - previousMillis >= OnTime) || OnTime==0)
+    {
+      ledState = false;  // Turn it off
+      previousMillis = currentMillis;  // Remember the time
+      pixels.setPixelColor(ledPin, pixels.Color(0,0,0));
+      pixels.show();
+    }
+    else if ((ledState == false) && (currentMillis - previousMillis >= OffTime) && OffTime!=0)
+    {
+      ledState = true;  // turn it on
+      previousMillis = currentMillis;   // Remember the time
+      if(OnTime==1000){
+        pixels.setPixelColor(ledPin, pixels.Color(0,255,0));
+        pixels.show();
+      }
+      else if(OnTime==500){
+        pixels.setPixelColor(ledPin, pixels.Color(255,255,0));
+        pixels.show();
+      }
+      else if (OnTime == 100){
+        pixels.setPixelColor(ledPin, pixels.Color(255,0,0));
+        pixels.show();
+      }
+    }  
+  }
+};
 
 enum Tasks {Null,
             Random,
@@ -93,6 +159,296 @@ void LEFT(){
   counter ++;
   id = 4;
   last_micros = micros();
+  }
+}
+
+//Random Blinking 
+void LED1(){
+  int x = random(0,255); 
+  int y = random(0,255);
+  int z = random(0,255);
+  if(state == false){
+    state = true;
+    for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(x,y,z)); 
+      pixels.show(); 
+    }
+    delay(500);  
+  }
+   else if(state == true){
+    state = false;
+    turn_off();
+    delay(500);  
+  } 
+}
+
+//Larson Scanner
+void LED2(){
+  int j;
+  pixels.setPixelColor(pos - 1, 0xFF3000); // Medium red
+  pixels.setPixelColor(pos    , 0x800000); // Center pixel is brightest
+  pixels.setPixelColor(pos + 1, 0xFF3000 ); // Medium red
+  pixels.show();
+  delay(30);
+ 
+  for(j=-2; j<= 2; j++) pixels.setPixelColor(pos+j, 0);
+ 
+  pos += dir;
+  if(pos < 0) {
+    pos = 1;
+    dir = -dir;
+  } else if(pos >= pixels.numPixels()) {
+    pos = pixels.numPixels() - 2;
+    dir = -dir;
+  }
+}
+
+//LED Chase
+void LED3(){
+  for (int i=0; i<NUMPIXELS; i++){
+    if(counter > 0){
+      break;
+    }
+    else if(i==0){
+      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
+    }
+    else{
+      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
+      pixels.setPixelColor(i-1, pixels.Color(0,0,0));      
+    }
+    pixels.show();
+    delay(del);
+  }
+  pixels.setPixelColor(13, pixels.Color(0,0,0));
+  pixels.show();
+  delay(del);
+
+  for (int i=13; i>-1; i--){
+    if(counter > 0){
+      break;
+    }
+    else if (i==13){
+      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
+    }
+    else{
+      pixels.setPixelColor(i, pixels.Color(random(0,255),random(0,255),random(0,255)));
+      pixels.setPixelColor(i+1, pixels.Color(0,0,0));
+    }
+    pixels.show();
+    delay(del);
+  }
+  pixels.setPixelColor(0, pixels.Color(0,0,0));
+  pixels.show();
+  delay(del);
+}
+
+//Flashlight 
+void LED4(){
+  for(int i=0;i<NUMPIXELS;i++){
+    pixels.setPixelColor(i, pixels.Color(255,255,255)); 
+    pixels.show(); 
+  } 
+}
+
+//AP Scanner
+void Scanner(){
+  int n = WiFi.scanNetworks();
+  mydisp.clearScreen();
+  for (int i=0; i<n; i++){
+    int x = random(0,65535);
+    String Name = WiFi.SSID(i);
+    mydisp.setTextColor(x);
+    mydisp.println(Name);
+  }
+}
+
+//Channel Traffic 
+void Channel_Activity(){
+ for (int i=0; i<NUMPIXELS;i++){
+  chn[i] = 0;
+  times[i] = 0;
+  }
+
+  //Count number of networks in each channel
+  int n = WiFi.scanNetworks();
+  for (int i = 0; i < n; i++) {
+    String Name = WiFi.SSID(i);
+    int count = WiFi.channel(i);
+    Serial.println(Name + ": " + count);
+    switch (count){
+    case 1:
+    {
+      chn[0] += 1;
+    }
+    break;
+    case 2:
+    {
+      chn[1] += 1;  
+    }
+    break;
+    case 3:
+    {
+      chn[2] += 1;
+    }
+    break;
+    case 4:
+    {
+      chn[3] += 1;
+    }
+    break;
+    case 5:
+    {
+      chn[4] += 1;
+    }
+    break;
+    case 6:
+    {
+      chn[5] += 1;
+    }
+    break;
+    case 7:
+    {
+      chn[6] += 1;
+    }
+    break;
+    case 8:
+    {
+      chn[7] += 1;
+    }
+    break;
+    case 9:
+    {
+      chn[8] += 1;
+    }
+    break;
+    case 10:
+    {
+      chn[9] += 1;
+    }
+    break;
+    case 11:
+    {
+      chn[10] += 1;     
+    }
+    break;
+    case 12:
+    {
+      chn[11] += 1;
+    }
+    break;
+    case 13:
+    {
+      chn[12] += 1;
+    }
+    break;
+    case 14:
+    {
+      chn[13] += 1;
+    }
+    break;
+    }
+  }
+
+  //Assign delay time for blinking depending on number of networks in each channel
+  for (int i =0; i<NUMPIXELS; i++){
+    if(chn[i]==0){
+      times[i] = 0;
+    }
+    else if(chn[i]==1 || chn[i]==2){
+      times[i] = 1000;
+    }
+    else if(chn[i]==3 || chn[i]==4){
+      times[i] = 500;
+    }
+    else if(chn[i]>=5){
+      times[i] = 100;
+    } 
+  }
+
+  //Create intance of Flasher class for each LED. 
+  Flasher led1(0, times[0], times[0]);
+  Flasher led2(1, times[1], times[1]);
+  Flasher led3(2, times[2], times[2]);
+  Flasher led4(3, times[3], times[3]);
+  Flasher led5(4, times[4], times[4]);
+  Flasher led6(5, times[5], times[5]);
+  Flasher led7(6, times[6], times[6]);
+  Flasher led8(7, times[7], times[7]);
+  Flasher led9(8, times[8], times[8]);
+  Flasher led10(9, times[9], times[9]);
+  Flasher led11(10, times[10], times[10]);
+  Flasher led12(11, times[11], times[11]);
+  Flasher led13(12, times[12], times[12]);
+  Flasher led14(13, times[13], times[13]);
+
+  //Set Title, font and horizontal line 
+  mydisp.clearScreen();
+  mydisp.setCursor(14, 0);
+  mydisp.setTextColor(CYAN);
+  mydisp.print("Channel Activity");
+  mydisp.setFont(&channels);
+  mydisp.setTextColor(WHITE);
+  mydisp.setCursor(0,53);
+  mydisp.print("1 2 3 4 5 6 7 8 9 10 11 12 13");
+  mydisp.drawLine(0, 53, 95, 53, ORANGE);
+
+  //Draw Bar Graph
+  for(int i =0; i<14; i++){
+    if(i<9){
+      if(times[i]==1000){
+        mydisp.fillRect(i*6,53-chn[i]*mult,3,chn[i]*mult,GREEN);
+        mydisp.setCursor(i*6-1, (53-chn[i]*mult)-10);
+        mydisp.print(chn[i]);
+      }
+      else if(times[i]==500){
+        mydisp.fillRect(i*6,53-chn[i]*mult,3,chn[i]*mult,YELLOW);
+        mydisp.setCursor(i*6-1, (53-chn[i]*mult)-10);
+        mydisp.print(chn[i]);
+      }
+      else if(times[i]==100){
+        mydisp.fillRect(i*6,53-chn[i]*mult,3,chn[i]*mult,RED);
+        mydisp.setCursor(i*6-1, (53-chn[i]*mult)-10);
+        mydisp.print(chn[i]);
+      }
+    }
+
+    //Change spacing between bars after channel 9
+    else if(i>=9){
+      if(times[i]==1000){
+        mydisp.fillRect(10*(i-4)+7,53-chn[i]*mult,3,chn[i]*mult,GREEN);
+        mydisp.setCursor((10*(i-4)+7), (53-chn[i]*mult)-10);
+        mydisp.print(chn[i]);
+      }
+      else if(times[i]==500){
+        mydisp.fillRect(10*(i-4)+7,53-chn[i]*mult,3,chn[i]*mult,YELLOW);
+        mydisp.setCursor((10*(i-4)+7), (53-chn[i]*mult)-10);
+        mydisp.print(chn[i]);
+      }
+      else if(times[i]==100){
+        mydisp.fillRect(10*(i-4)+7,53-chn[i]*mult,3,chn[i]*mult,RED);
+        mydisp.setCursor((10*(i-4)+7), (53-chn[i]*mult)-10);
+        mydisp.print(chn[i]);
+      }
+    }
+  }
+
+  //Blink LEDs 
+  while (counter == 0){
+    yield();
+    led1.Update();
+    led2.Update();
+    led3.Update();
+    led4.Update();
+    led5.Update();
+    led6.Update();
+    led7.Update();
+    led8.Update();
+    led9.Update();
+    led10.Update();
+    led11.Update();
+    led12.Update();
+    led13.Update();
+    led14.Update();
   }
 }
 
@@ -299,7 +655,7 @@ void loop()
         mydisp.print("Godai Group");
         mydisp.drawImage(1, 48, &garret);
         mydisp.setCursor(17, 52);
-        mydisp.print("Garrett Gee 2");
+        mydisp.print("Garret Gee");
         
           break;
         case 2:
