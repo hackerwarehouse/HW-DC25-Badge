@@ -18,6 +18,9 @@ static const char PROGMEM itmItem2[] = "Display Artwork";
 static const char PROGMEM itmSubmenu2[] = "Customization";
 static const char PROGMEM itmItem3[] = "Set Nick/Alias";
 static const char PROGMEM itmItem4[] = "Set Artwork";
+static const char PROGMEM itmItem12[] = "Set Region";
+static const char PROGMEM itmSubItem1[] = "United States";
+static const char PROGMEM itmSubItem2 [] = "Europian Union";
 
 static const char PROGMEM itmSubmenu3[] = "AP Scanner";
 static const char PROGMEM itmItem5[] = "SSID List";
@@ -54,9 +57,15 @@ static const char PROGMEM itmSubmenu7[] = "Shouts";
 
  const char * const mnuSubmenu2[]PROGMEM  = {
   itmSubmenu2,
-  itmItem3, itmItem4
+  itmItem3, itmItem4, itmItem12
   }; 
- const int cntSubmenu2 PROGMEM = 2;
+ const int cntSubmenu2 PROGMEM = 3;
+
+ const char * const mnuRegion[] PROGMEM = {
+  itmItem12,
+  itmSubItem1, itmSubItem2
+ };
+ const int cntmnuRegion PROGMEM = 2;
 
  const char * const mnuSubmenu3[] PROGMEM = {
   itmSubmenu3,
@@ -64,7 +73,7 @@ static const char PROGMEM itmSubmenu7[] = "Shouts";
   };  
  const int cntSubmenu3 PROGMEM = 1;
  
-  const char * const mnuSubmenu4[] PROGMEM = {
+ const char * const mnuSubmenu4[] PROGMEM = {
   itmSubmenu4,
   itmItem6, itmItem7, itmItem8, itmItem9
   };  

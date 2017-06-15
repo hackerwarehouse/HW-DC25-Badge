@@ -30,6 +30,7 @@
 
 #define NUM_SAMPLES 10  //Number of readings for battery voltage
 
+
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
 qMenuSystem menu=qMenuSystem(&mydisp);
@@ -42,6 +43,7 @@ const byte up = 0;
 volatile byte counter = 0;
 volatile byte id  = 0;
 volatile byte img = 0;
+volatile byte region_id = 1; //1->US, 2->EU, 3->JP  US default
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
@@ -318,9 +320,9 @@ void loop()
       menu.InitMenu((const char ** )mnuRoot,cntRoot,2);
       counter--;
       break;
-  }
+   }
  }
-  
+
   else if (counter > 0 && CurrentTask == Null)
   { 
     switch(id)
@@ -381,9 +383,10 @@ void loop()
         menu.MessageBox("Scanning...");
         CurrentTask = Channel;
         break;
+        
         case 2:
         display_image();
-          break;
+        break;
       }
       
     // Logic for Submenu 2
@@ -391,6 +394,9 @@ void loop()
       switch (clickedItem)
       {
         case 1:
+        CurrentTask = Null;
+        break;
+        
         case 2:
         mydisp.clearScreen();
         menu.MessageBox("Select Artwork");
@@ -399,7 +405,12 @@ void loop()
         mydisp.drawImage(11, 0, &badge); //Make HW artwork always show first  
         img = 1;
         CurrentTask = Artwork;
-          break;
+        break;
+
+        case 3: 
+        menu.InitMenu((const char ** )mnuRegion,cntmnuRegion,1);
+        menu.CurrentMenu==mnuRegion;
+        break;
       }
       
     // Logic for Submenu 3
@@ -493,6 +504,28 @@ void loop()
         case 3:
           break;
       }
+    //logic for Region Submenu
+    else if (menu.CurrentMenu==mnuRegion)
+      switch (clickedItem)
+      {
+        case 1:
+        region_id = 1;  //US
+        EEPROM.write(1,region_id);  
+        EEPROM.commit();
+        menu.MessageBox("Region Set");
+        delay(1000);
+        menu.InitMenu((const char ** )mnuRegion,cntmnuRegion,1);
+        break;
+        
+        case 2:
+        region_id = 2;  //EU
+        EEPROM.write(1,region_id);  
+        EEPROM.commit();
+        menu.MessageBox("Region Set");
+        delay(1000);
+        menu.InitMenu((const char ** )mnuRegion,cntmnuRegion,2);
+        break;      
+      }
   } 
   
   else if(clickedItem == -1){ // Return Logic
@@ -548,6 +581,11 @@ void loop()
       {
         menu.InitMenu((const char ** )mnuRoot,cntRoot,3);
       }
+
+    else if (menu.CurrentMenu==mnuRegion){
+       menu.InitMenu((const char ** )mnuSubmenu2,cntSubmenu2,3);
+    }
+
    }
  }
 
