@@ -56,6 +56,8 @@ int sum = 0.0;
 int sample_count = 0;
 const int battery = A0;
 
+int h, w, buffidx;  //Variables for large images 
+
 //Add tasks as needed 
 enum Tasks {Null,
             Random,
@@ -113,25 +115,61 @@ void display_image(){
   switch(image){
     
   case 1:
+  h = 63;
+  w = 73;
+  buffidx = 0;
   mydisp.clearScreen();
-  mydisp.drawImage(11,0,&badge);
+  //mydisp.drawImage(11,0,&badge);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+      buffidx++;
+    } 
+  }
   break;
   
   case 2:
+  h = 63;
+  w = 63;
+  buffidx = 0;
   mydisp.clearScreen();
-  mydisp.drawImage(17,0,&godai_1);
+  //mydisp.drawImage(17,0,&godai_1);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+      buffidx++;
+    } 
+  }
   break;
   
   case 3:
+  h = 25;
+  w = 96;
+  buffidx = 0;
   mydisp.clearScreen(); 
-  mydisp.drawImage(0,20,&defcon);
+  //mydisp.drawImage(0,20,&defcon);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+      buffidx++;
+    } 
+  }
   break;
   
   case 4: 
+  h = 64;
+  w = 96;
+  buffidx = 0;
   mydisp.clearScreen();
-  mydisp.drawImage(0,0,&blank);
-  break;
+  //mydisp.drawImage(0,0,&blank);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col+17, row, pgm_read_word(image_data_blank+ buffidx));
+      buffidx++;
+    } 
   }
+  break;
+ }
 }
 
 //Function used to map the analog input voltage (1V - Voltage Divider in circuit) to max battery voltage (3V - 2xAA)
@@ -252,18 +290,45 @@ void loop()
       img --;
       switch(img){
         case 1:
+        h = 63;
+        w = 73;
+        buffidx = 0;
         mydisp.clearScreen();
-        mydisp.drawImage(11,0,&badge);
+        //mydisp.drawImage(11,0,&badge);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
         break;
   
         case 2:
+        h = 63;
+        w = 63;
+        buffidx = 0;
         mydisp.clearScreen();
-        mydisp.drawImage(17,0,&godai_1);
+        //mydisp.drawImage(17,0,&godai_1);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+            buffidx++;
+          } 
+        }
         break;
   
         case 3:
+        h = 25;
+        w = 96;
+        buffidx = 0;
         mydisp.clearScreen(); 
-        mydisp.drawImage(0,20,&defcon);
+        //mydisp.drawImage(0,20,&defcon);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+            buffidx++;
+          } 
+        }
         break;
   
         case 4: //Blank
@@ -286,18 +351,45 @@ void loop()
       img ++;
       switch(img){
         case 1:
+        h = 63;
+        w = 73;
+        buffidx = 0;
         mydisp.clearScreen();
-        mydisp.drawImage(11,0,&badge);
+        //mydisp.drawImage(11,0,&badge);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
         break;
   
         case 2:
+        h = 63;
+        w = 63;
+        buffidx = 0;
         mydisp.clearScreen();
-        mydisp.drawImage(17,0,&godai_1);
+        //mydisp.drawImage(17,0,&godai_1);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+            buffidx++;
+          } 
+        }
         break;
   
         case 3:
+        h = 25;
+        w = 96;
+        buffidx = 0;
         mydisp.clearScreen(); 
-        mydisp.drawImage(0,20,&defcon);
+        //mydisp.drawImage(0,20,&defcon);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+            buffidx++;
+          } 
+        }
         break;
   
         case 4:
@@ -308,9 +400,18 @@ void loop()
         //Wraparound case
   
         case 5:
+        h = 63;
+        w = 73;
+        buffidx = 0;
+        img = 1;
         mydisp.clearScreen();
-        img = 1; //Reset img id
-        mydisp.drawImage(11,0,&badge); 
+        //mydisp.drawImage(11,0,&badge);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
         break;
       }
       break;
@@ -398,13 +499,31 @@ void loop()
         break;
         
         case 2:
+        h = 63;
+        w = 73;
+        buffidx = 0;
+        
         mydisp.clearScreen();
         menu.MessageBox("Select Artwork");
         delay(1000);
-        mydisp.clearScreen();
+        mydisp.clearScreen(); 
+        /*
+        This method uses a lot of dynamic memory
+     
         mydisp.drawImage(11, 0, &badge); //Make HW artwork always show first  
         img = 1;
         CurrentTask = Artwork;
+        
+
+        This method puts image in EEPROM, saving dynamic memory, but slower*/
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
+        img = 1;
+        CurrentTask = Artwork; 
         break;
 
         case 3: 
@@ -449,6 +568,7 @@ void loop()
     else if (menu.CurrentMenu==mnuSubmenu5)
       switch (clickedItem)
       {
+        ///This images can be stored in dynamic memory. No need to put them in PROGMEM
         case 1:
         mydisp.clearScreen();
         mydisp.setRotation(0);

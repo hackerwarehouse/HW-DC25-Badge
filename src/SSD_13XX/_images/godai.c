@@ -23,9 +23,7 @@
 
 #include <stdlib.h>
 
-
-
-
+//208
 
 static const uint16_t image_data_godai[208]
 #if defined(_FORCE_PROGMEM__)
