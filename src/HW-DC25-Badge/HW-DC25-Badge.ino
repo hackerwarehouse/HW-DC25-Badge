@@ -3,6 +3,7 @@
   #include <avr/power.h>
 #endif
 
+#include <EEPROM.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -12,6 +13,9 @@
 #include <qMenuSystem.h>
 
 #include "TestMenu.h"
+#include "_images/godai_1.c"  //New image for artwork feature 
+#include "_images/blank.c"  //New image for artwork feature 
+#include "_images/defcon.c" //New image for artwork feature 
 #include "_images/badge.c"
 #include "_images/hacker.c"
 #include "_images/godai.c"
@@ -24,6 +28,9 @@
 #include "channelactivity.h"
 #include "core.h"
 
+#define NUM_SAMPLES 10  //Number of readings for battery voltage
+
+
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
 qMenuSystem menu=qMenuSystem(&mydisp);
@@ -35,27 +42,34 @@ const byte up = 0;
 
 volatile byte counter = 0;
 volatile byte id  = 0;
-
-//cant find where used
-//long interavl = 250;
-//long interval1 = 500;
-//unsigned long prevMillis = 0;
-//int delayval = 500;
-//bool flag = true;
+volatile byte img = 0;
+volatile byte region_id = 1; //1->US, 2->EU, 3->JP  US default
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
 
+//Variables for Batt voltage readings
+float voltage = 0.0;
+float real_voltage = 0.0;
+float threshold = 2.7;  //Min operating voltage for booster (used for screen). Will test with slightly smaller voltages to see if it can handle it and extend badge life.
+int sum = 0.0;
+int sample_count = 0;
+const int battery = A0;
+
+int h, w, buffidx;  //Variables for large images 
+
+//Add tasks as needed 
 enum Tasks {Null,
             Random,
             Cyclon,
             Chase,
             Flashlight,
             Scan,
-            Channel
-            };
+            Channel,
+            Artwork
+            };    
 
-Tasks CurrentTask = Null; 
+Tasks CurrentTask = Null;
 
 void turn_off(){
   for(int i=0;i<NUMPIXELS;i++){
@@ -96,25 +110,88 @@ void LEFT(){
   }
 }
 
+void display_image(){
+  int image = EEPROM.read(0);   //Read saved image and display it
+  switch(image){
+    
+  case 1:
+  h = 63;
+  w = 73;
+  buffidx = 0;
+  mydisp.clearScreen();
+  //mydisp.drawImage(11,0,&badge);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+      buffidx++;
+    } 
+  }
+  break;
+  
+  case 2:
+  h = 63;
+  w = 63;
+  buffidx = 0;
+  mydisp.clearScreen();
+  //mydisp.drawImage(17,0,&godai_1);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+      buffidx++;
+    } 
+  }
+  break;
+  
+  case 3:
+  h = 25;
+  w = 96;
+  buffidx = 0;
+  mydisp.clearScreen(); 
+  //mydisp.drawImage(0,20,&defcon);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+      buffidx++;
+    } 
+  }
+  break;
+  
+  case 4: 
+  h = 64;
+  w = 96;
+  buffidx = 0;
+  mydisp.clearScreen();
+  //mydisp.drawImage(0,0,&blank);
+  for (int row=0; row<h; row++) {
+    for (int col=0; col<w; col++) { 
+      mydisp.drawPixel(col+17, row, pgm_read_word(image_data_blank+ buffidx));
+      buffidx++;
+    } 
+  }
+  break;
+ }
+}
+
+//Function used to map the analog input voltage (1V - Voltage Divider in circuit) to max battery voltage (3V - 2xAA)
+float mapfloat(float x, float in_min, float in_max, float out_min, float out_max)
+{
+ return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+} 
+
 void setup()
 {  
+  EEPROM.begin(512);  //Initialize eeprom 
+  
   pinMode(up, INPUT_PULLUP);
   pinMode(down, INPUT_PULLUP);
   pinMode(right, INPUT_PULLUP);
-  pinMode(left, INPUT);
+  pinMode(left, INPUT); //External pulldown resistor (required for programming)
 
   attachInterrupt(digitalPinToInterrupt(up), UP, FALLING);
   attachInterrupt(digitalPinToInterrupt(down), DOWN, FALLING);
   attachInterrupt(digitalPinToInterrupt(right), RIGHT, FALLING);
   attachInterrupt(digitalPinToInterrupt(left), LEFT, RISING);
 
- /* WiFi.mode (WIFI_STA);
-  WiFi.disconnect();*/
-
-  /*WiFi.disconnect();
-  WiFi.mode(WIFI_OFF);
-  WiFi.forceSleepBegin();*/
-  
   menu.InitMenu((const char **)mnuRoot,cntRoot,1);
   pixels.begin();
   turn_off();
@@ -122,9 +199,35 @@ void setup()
 }
 
 void loop()
-{ 
+{
+////Check battery during operation /////
+
+  while(sample_count < NUM_SAMPLES){  //Average battery analog readings  
+    sum+=analogRead(battery);
+    sample_count++;
+    delay(1);
+  }
+
+  voltage = ((float)sum / (float)NUM_SAMPLES * 1.08) / 1024.0; //Get voltage (0-1V)
+  real_voltage = mapfloat(voltage, 0.0, 1.0, 0.0, 3.0); //Get real voltage (0-3V) 
+  sample_count =0;
+  sum =0;
+
+  if (real_voltage< threshold){ //Check if batteries are above threshold 
+    mydisp.clearScreen();
+    mydisp.setTextColor(RED);
+    mydisp.setTextScale(2);
+    mydisp.setCursor(15, 0);
+    mydisp.println("Change");
+    mydisp.println("");
+    mydisp.print("Batteries!!!!");
+    delay(3000);
+    mydisp.clearScreen();
+    ESP.deepSleep(0); //Put device in sleep mode forever until batteries have been changed   
+  }
+
   int keycode=0;
-  int clickedItem=0; 
+  int clickedItem=0;
 
   if (CurrentTask == Random){
     LED1();
@@ -161,8 +264,6 @@ void loop()
   else if (CurrentTask == Scan){
     Scanner();
     CurrentTask = Null;
-    ///WiFi.mode(WIFI_OFF);
-    //WiFi.forceSleepBegin();   
   }
 
   else if (CurrentTask == Channel){
@@ -171,7 +272,158 @@ void loop()
     mydisp.setFont(&defaultFont);
     CurrentTask = Null;   
   }
+
+  else if  (CurrentTask == Artwork && counter > 0){
+    switch(id){
+      case 1:
+      counter--;
+      EEPROM.write(0,img);  //Save selected image in eeprom
+      EEPROM.commit();
+      menu.MessageBox("Saving...");
+      delay(1000);
+      CurrentTask = Null;
+      menu.InitMenu((const char ** )mnuSubmenu2,cntSubmenu2,1); //Return to menu 
+      break;
+      
+      case 2:
+      counter--;  
+      img --;
+      switch(img){
+        case 1:
+        h = 63;
+        w = 73;
+        buffidx = 0;
+        mydisp.clearScreen();
+        //mydisp.drawImage(11,0,&badge);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
+        break;
   
+        case 2:
+        h = 63;
+        w = 63;
+        buffidx = 0;
+        mydisp.clearScreen();
+        //mydisp.drawImage(17,0,&godai_1);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+            buffidx++;
+          } 
+        }
+        break;
+  
+        case 3:
+        h = 25;
+        w = 96;
+        buffidx = 0;
+        mydisp.clearScreen(); 
+        //mydisp.drawImage(0,20,&defcon);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+            buffidx++;
+          } 
+        }
+        break;
+  
+        case 4: //Blank
+        mydisp.clearScreen();
+        menu.MessageBox("No Artwork");
+        break;
+        
+        //Wrap around case
+  
+        case 0: //Blank 
+        mydisp.clearScreen();
+        img = 4;  //Reset image id 
+        menu.MessageBox("No Artwork");
+        break;
+      }
+      break;
+      
+      case 3:
+      counter--;
+      img ++;
+      switch(img){
+        case 1:
+        h = 63;
+        w = 73;
+        buffidx = 0;
+        mydisp.clearScreen();
+        //mydisp.drawImage(11,0,&badge);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
+        break;
+  
+        case 2:
+        h = 63;
+        w = 63;
+        buffidx = 0;
+        mydisp.clearScreen();
+        //mydisp.drawImage(17,0,&godai_1);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+            buffidx++;
+          } 
+        }
+        break;
+  
+        case 3:
+        h = 25;
+        w = 96;
+        buffidx = 0;
+        mydisp.clearScreen(); 
+        //mydisp.drawImage(0,20,&defcon);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+            buffidx++;
+          } 
+        }
+        break;
+  
+        case 4:
+        mydisp.clearScreen();
+        menu.MessageBox("No Artwork");
+        break;
+  
+        //Wraparound case
+  
+        case 5:
+        h = 63;
+        w = 73;
+        buffidx = 0;
+        img = 1;
+        mydisp.clearScreen();
+        //mydisp.drawImage(11,0,&badge);
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
+        break;
+      }
+      break;
+      
+      case 4:
+      CurrentTask = Null;
+      menu.InitMenu((const char ** )mnuRoot,cntRoot,2);
+      counter--;
+      break;
+   }
+ }
+
   else if (counter > 0 && CurrentTask == Null)
   { 
     switch(id)
@@ -232,11 +484,10 @@ void loop()
         menu.MessageBox("Scanning...");
         CurrentTask = Channel;
         break;
+        
         case 2:
-        mydisp.clearScreen();
-        mydisp.setRotation(0);
-        mydisp.drawImage(11, 0, &badge);
-          break;
+        display_image();
+        break;
       }
       
     // Logic for Submenu 2
@@ -244,8 +495,41 @@ void loop()
       switch (clickedItem)
       {
         case 1:
+        CurrentTask = Null;
+        break;
+        
         case 2:
-          break;
+        h = 63;
+        w = 73;
+        buffidx = 0;
+        
+        mydisp.clearScreen();
+        menu.MessageBox("Select Artwork");
+        delay(1000);
+        mydisp.clearScreen(); 
+        /*
+        This method uses a lot of dynamic memory
+     
+        mydisp.drawImage(11, 0, &badge); //Make HW artwork always show first  
+        img = 1;
+        CurrentTask = Artwork;
+        
+
+        This method puts image in EEPROM, saving dynamic memory, but slower*/
+        for (int row=0; row<h; row++) {
+          for (int col=0; col<w; col++) { 
+            mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+            buffidx++;
+          } 
+        }
+        img = 1;
+        CurrentTask = Artwork; 
+        break;
+
+        case 3: 
+        menu.InitMenu((const char ** )mnuRegion,cntmnuRegion,1);
+        menu.CurrentMenu==mnuRegion;
+        break;
       }
       
     // Logic for Submenu 3
@@ -284,6 +568,7 @@ void loop()
     else if (menu.CurrentMenu==mnuSubmenu5)
       switch (clickedItem)
       {
+        ///This images can be stored in dynamic memory. No need to put them in PROGMEM
         case 1:
         mydisp.clearScreen();
         mydisp.setRotation(0);
@@ -301,7 +586,7 @@ void loop()
         mydisp.setCursor(17, 52);
         mydisp.print("Garrett Gee 2");
         
-          break;
+        break;
         case 2:
         mydisp.clearScreen();
         mydisp.setRotation(0);
@@ -318,7 +603,6 @@ void loop()
         mydisp.setCursor(0, 52);
         mydisp.print("garrettgee.com");
         mydisp.drawLine(0, 60, 64, 60, CYAN);
-
       }
 
       // Logic for Submenu 6
@@ -339,6 +623,28 @@ void loop()
         case 2:
         case 3:
           break;
+      }
+    //logic for Region Submenu
+    else if (menu.CurrentMenu==mnuRegion)
+      switch (clickedItem)
+      {
+        case 1:
+        region_id = 1;  //US
+        EEPROM.write(1,region_id);  
+        EEPROM.commit();
+        menu.MessageBox("Region Set");
+        delay(1000);
+        menu.InitMenu((const char ** )mnuRegion,cntmnuRegion,1);
+        break;
+        
+        case 2:
+        region_id = 2;  //EU
+        EEPROM.write(1,region_id);  
+        EEPROM.commit();
+        menu.MessageBox("Region Set");
+        delay(1000);
+        menu.InitMenu((const char ** )mnuRegion,cntmnuRegion,2);
+        break;      
       }
   } 
   
@@ -395,6 +701,11 @@ void loop()
       {
         menu.InitMenu((const char ** )mnuRoot,cntRoot,3);
       }
+
+    else if (menu.CurrentMenu==mnuRegion){
+       menu.InitMenu((const char ** )mnuSubmenu2,cntSubmenu2,3);
+    }
+
    }
  }
 
