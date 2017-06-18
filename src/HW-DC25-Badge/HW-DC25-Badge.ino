@@ -87,8 +87,6 @@ void setup()
 void resetMenu(){
   all_leds_off();
   mydisp.setFont(&defaultFont);
-//  CurrentTask = Null;
-//  wifi_off();
 }
 
 void all_leds_off(){
@@ -133,7 +131,7 @@ void loop()
   
   if (clickedItem > 0)
   {
-    // Logic for Root menu
+    // Logic for root menu
     if (menu.CurrentMenu==mnuRoot)
       switch (clickedItem)
       {
@@ -156,7 +154,8 @@ void loop()
           menu.InitMenu((const char ** )mnuAbout,cntAbout,1);
           break;
       }
-      
+
+    // Logic for sub menus
     else if (menu.CurrentMenu==mnuWiFiTools)
       switch (clickedItem)
       {
@@ -177,7 +176,7 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          menu.MessageBox("");
+          mydisp.clearScreen();
           LED_Random();
           resetMenu();
           break;
@@ -202,7 +201,13 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          menu.MessageBox("");
+          //Anim_Eyes();
+          break;
+        case 2:
+          break;
+        case 3:
+          break;
+        case 4:
           break;
       }
 
@@ -243,7 +248,8 @@ void loop()
   // menu return logic
   else if(clickedItem == -1){
     if (menu.CurrentMenu==mnuRoot)
-      { //In root menu already - Do Nothing }
+      { //In root menu already - Do Nothing 
+      }
     else if (menu.CurrentMenu==mnuWiFiTools)   
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,1); }
     else if (menu.CurrentMenu==mnuBlinky)
