@@ -9,15 +9,16 @@
 #include <SPI.h>
 #include <qMenuDisplay.h>
 #include <qMenuSystem.h>
-
 #include "_fonts/defaultFont.c"
 
 #include "about.h"
 #include "apscanner.h"
+#include "benchmark.h"
 #include "blinky.h"
 #include "channelactivity.h"
 #include "core.h"
 #include "mainmenu.h"
+#include "shouts.h"
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
@@ -80,6 +81,7 @@ void setup()
   
   menu.InitMenu((const char **)mnuRoot,cntRoot,1);
   pixels.begin();
+  pixels.setBrightness(64); //set to 1/4 brightness overall
   all_leds_off();
   Serial.begin(115200);
 }
@@ -142,13 +144,13 @@ void loop()
           menu.InitMenu((const char ** )mnuBlinky,cntBlinky,1);
           break;
         case 3:
-          menu.InitMenu((const char ** )mnuAnimation,cntAnimation,1);
+          menu.InitMenu((const char ** )mnuGraphics,cntGraphics,1);
           break;
         case 4:
           menu.InitMenu((const char ** )mnuExtra,cntExtra,1);
           break; 
          case 5:
-          menu.InitMenu((const char ** )mnuCustomize,cntCustomize,1);
+          menu.InitMenu((const char ** )mnuSettings,cntSettings,1);
           break;
          case 6:
           menu.InitMenu((const char ** )mnuAbout,cntAbout,1);
@@ -197,11 +199,11 @@ void loop()
           break;
       }
 
-    else if (menu.CurrentMenu==mnuAnimation)
+    else if (menu.CurrentMenu==mnuGraphics)
       switch (clickedItem)
       {
         case 1:
-          //Anim_Eyes();
+          Benchmark();
           break;
         case 2:
           break;
@@ -215,13 +217,14 @@ void loop()
       switch (clickedItem)
       {
         case 1:
+          Shouts();
           break;
         case 2:
           mydisp.clearScreen();
           break;
       }
 
-    else if (menu.CurrentMenu==mnuCustomize)
+    else if (menu.CurrentMenu==mnuSettings)
       switch (clickedItem)
       {
         case 1:
@@ -229,6 +232,35 @@ void loop()
           break;
         case 2:
           //artwork setting placeholder
+          break;
+        case 3:
+          //Setting_Brightness();
+          menu.InitMenu((const char ** )mnuBrightness,cntBrightness,1);
+          break;
+      }
+
+    else if (menu.CurrentMenu==mnuBrightness)
+      switch (clickedItem)
+      {
+        case 1:
+          menu.MessageBox("Saved: Uber Low");
+          pixels.setBrightness(10); 
+          break;
+        case 2:
+          menu.MessageBox("Saved: Low");
+          pixels.setBrightness(64); //set to 1/4 brightness overall
+          break;
+        case 3:
+          menu.MessageBox("Saved: Medium");
+          pixels.setBrightness(128);
+          break;
+        case 4:
+          menu.MessageBox("Saved: High");
+          pixels.setBrightness(184);
+          break;
+        case 5:
+          menu.MessageBox("Saved: Too Bright!");
+          pixels.setBrightness(255);  // highest setting
           break;
       }
 
@@ -250,18 +282,24 @@ void loop()
     if (menu.CurrentMenu==mnuRoot)
       { //In root menu already - Do Nothing 
       }
+
+    //2nd level menus
     else if (menu.CurrentMenu==mnuWiFiTools)   
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,1); }
     else if (menu.CurrentMenu==mnuBlinky)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,2); }
-    else if (menu.CurrentMenu==mnuAnimation)
+    else if (menu.CurrentMenu==mnuGraphics)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
     else if (menu.CurrentMenu==mnuExtra)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); }
-    else if (menu.CurrentMenu==mnuCustomize)
+    else if (menu.CurrentMenu==mnuSettings)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); }
     else if (menu.CurrentMenu==mnuAbout)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); }
+
+    //3rd level menu
+    else if (menu.CurrentMenu==mnuBrightness)
+      { menu.InitMenu((const char ** )mnuSettings,cntSettings,1); }
 
     // not converted yet
     else if (menu.CurrentMenu==(const char **)"SSID List")

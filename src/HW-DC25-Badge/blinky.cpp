@@ -1,4 +1,5 @@
 #include <Adafruit_NeoPixel.h>
+
 #include "core.h"
 
 extern Adafruit_NeoPixel pixels;
@@ -21,10 +22,9 @@ void LED_Random(){
     }
 }
 
-int pos = 0, dir = 1;
-
 //Larson Scanner
 void LED_Larson(){
+  int pos = 0, dir = 1;
   int j;
 
   while (counter <= 0)

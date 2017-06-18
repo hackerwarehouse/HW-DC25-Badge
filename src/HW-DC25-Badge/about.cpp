@@ -38,7 +38,7 @@ void SysInfo()
   mydisp.setCursor(1, 36);
   mydisp.print(" rel date 2017-07-01");
   mydisp.setCursor(1, 52);
-  mydisp.print("");
+  mydisp.print(" src on github.com");
 }
 
 
