@@ -2,7 +2,6 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
-
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -11,22 +10,26 @@
 #include <qMenuDisplay.h>
 #include <qMenuSystem.h>
 
-#include "TestMenu.h"
 #include "_images/badge.c"
-#include "_images/hacker.c"
-#include "_images/godai.c"
-#include "_images/js.c"
-#include "_images/garret.c"
 #include "_fonts/defaultFont.c"
 
 #include "apscanner.h"
 #include "blinky.h"
+#include "credits.h"
 #include "channelactivity.h"
 #include "core.h"
+#include "mainmenu.h"
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
 qMenuSystem menu=qMenuSystem(&mydisp);
+
+//cant find where used
+//long interavl = 250;
+//long interval1 = 500;
+//unsigned long prevMillis = 0;
+//int delayval = 500;
+//bool flag = true;
 
 const byte left = 15; 
 const byte down = 10; 
@@ -36,33 +39,8 @@ const byte up = 0;
 volatile byte counter = 0;
 volatile byte id  = 0;
 
-//cant find where used
-//long interavl = 250;
-//long interval1 = 500;
-//unsigned long prevMillis = 0;
-//int delayval = 500;
-//bool flag = true;
-
 long debouncing_time = 250;
 unsigned long last_micros = 0;
-
-enum Tasks {Null,
-            Random,
-            Cyclon,
-            Chase,
-            Flashlight,
-            Scan,
-            Channel
-            };
-
-Tasks CurrentTask = Null; 
-
-void turn_off(){
-  for(int i=0;i<NUMPIXELS;i++){
-    pixels.setPixelColor(i, pixels.Color(0,0,0));
-    pixels.show();
-  }  
-}
 
 void UP(){
   if((long)(micros() - last_micros) >= debouncing_time * 1000) {
@@ -96,6 +74,25 @@ void LEFT(){
   }
 }
 
+void resetMenu(){
+  all_leds_off();
+  mydisp.setFont(&defaultFont);
+//  CurrentTask = Null;
+//  wifi_off();
+}
+
+void all_leds_off(){
+  for(int i=0;i<NUMPIXELS;i++){
+    pixels.setPixelColor(i, pixels.Color(0,0,0));
+    pixels.show();
+  }  
+}
+
+void wifi_off(){
+  WiFi.mode(WIFI_OFF);
+  WiFi.forceSleepBegin();
+}
+
 void setup()
 {  
   pinMode(up, INPUT_PULLUP);
@@ -107,17 +104,10 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(down), DOWN, FALLING);
   attachInterrupt(digitalPinToInterrupt(right), RIGHT, FALLING);
   attachInterrupt(digitalPinToInterrupt(left), LEFT, RISING);
-
- /* WiFi.mode (WIFI_STA);
-  WiFi.disconnect();*/
-
-  /*WiFi.disconnect();
-  WiFi.mode(WIFI_OFF);
-  WiFi.forceSleepBegin();*/
   
   menu.InitMenu((const char **)mnuRoot,cntRoot,1);
   pixels.begin();
-  turn_off();
+  all_leds_off();
   Serial.begin(115200);
 }
 
@@ -125,54 +115,8 @@ void loop()
 { 
   int keycode=0;
   int clickedItem=0; 
-
-  if (CurrentTask == Random){
-    LED1();
-    if (counter > 0){
-      turn_off();   
-      CurrentTask = Null;
-    }  
-  }
-
-  else if (CurrentTask == Cyclon){
-    LED2();
-    if (counter > 0){
-      turn_off();   
-      CurrentTask = Null;
-    }
-  }
-
-  else if (CurrentTask == Chase){
-    LED3();
-    if (counter > 0){
-      turn_off();   
-      CurrentTask = Null;
-    }
-  }
-
-  else if (CurrentTask == Flashlight){
-    LED4();
-    if (counter > 0){
-      turn_off();  
-      CurrentTask = Null;
-    }
-  }
   
-  else if (CurrentTask == Scan){
-    Scanner();
-    CurrentTask = Null;
-    ///WiFi.mode(WIFI_OFF);
-    //WiFi.forceSleepBegin();   
-  }
-
-  else if (CurrentTask == Channel){
-    Channel_Activity();
-    turn_off();
-    mydisp.setFont(&defaultFont);
-    CurrentTask = Null;   
-  }
-  
-  else if (counter > 0 && CurrentTask == Null)
+  if (counter > 0)
   { 
     switch(id)
     {
@@ -202,16 +146,16 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          menu.InitMenu((const char ** )mnuSubmenu1,cntSubmenu1,1);
+          menu.InitMenu((const char ** )mnuWiFiTools,cntWiFiTools,1);
           break;
         case 2:
-          menu.InitMenu((const char ** )mnuSubmenu2,cntSubmenu2,1);
+          menu.InitMenu((const char ** )mnuBlinky,cntBlinky,1);
           break;
         case 3:
           menu.InitMenu((const char ** )mnuSubmenu3,cntSubmenu3,1);
           break;
         case 4:
-          menu.InitMenu((const char ** )mnuSubmenu4,cntSubmenu4,1);
+          menu.InitMenu((const char ** )mnuSubmenu2,cntSubmenu2,1);
           break; 
          case 5:
           menu.InitMenu((const char ** )mnuSubmenu5,cntSubmenu5,1);
@@ -224,20 +168,48 @@ void loop()
           break;
       }
       
-    // Logic for Submenu 1
-    else if (menu.CurrentMenu==mnuSubmenu1)
+    else if (menu.CurrentMenu==mnuWiFiTools)
       switch (clickedItem)
       {
         case 1:
-        menu.MessageBox("Scanning...");
-        CurrentTask = Channel;
-        break;
+          menu.MessageBox("Scanning...");
+          Channel_Activity();
+          resetMenu();
+          break;
         case 2:
-        mydisp.clearScreen();
-        mydisp.setRotation(0);
-        mydisp.drawImage(11, 0, &badge);
+          menu.MessageBox("Scanning...");
+          AP_Scanner();
+          resetMenu();
+          //wifi_off();
           break;
       }
+
+    else if (menu.CurrentMenu==mnuBlinky)
+      switch (clickedItem)
+      {
+        case 1:
+          menu.MessageBox("");
+          LED_Random();
+          resetMenu();
+          break;
+        case 2:
+          menu.MessageBox(""); 
+          LED_Larson();
+          resetMenu();
+          break;
+         case 3:
+          menu.MessageBox("");
+          LED_Chase();
+          resetMenu();
+          break;
+         case 4:
+          menu.MessageBox("");
+          LED_Flashlight();
+          resetMenu();
+          break;
+      }
+
+      
       
     // Logic for Submenu 2
     else if (menu.CurrentMenu==mnuSubmenu2)
@@ -254,29 +226,6 @@ void loop()
       {
         case 1:
           menu.MessageBox("Scanning...");
-          CurrentTask = Scan;
-          break;
-      }
-      
-    // Logic for Submenu 4
-    else if (menu.CurrentMenu==mnuSubmenu4)
-      switch (clickedItem)
-      {
-        case 1:
-          menu.MessageBox("");
-          CurrentTask=Random;
-          break;
-        case 2:
-          menu.MessageBox("");
-          CurrentTask=Cyclon;  
-          break;
-         case 3:
-          menu.MessageBox("");
-          CurrentTask=Chase;  
-          break;
-         case 4:
-          menu.MessageBox("");
-          CurrentTask=Flashlight;  
           break;
       }
 
@@ -285,40 +234,10 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-        mydisp.clearScreen();
-        mydisp.setRotation(0);
-        mydisp.setTextColor(GREENYELLOW);
-        mydisp.drawImage(0, 0, &js);
-        mydisp.setCursor(17, 4);
-        mydisp.print("Jaycon Systems");
-        mydisp.drawImage(1, 16, &hacker);
-        mydisp.setCursor(17, 20);
-        mydisp.print("Hacker Warehouse");
-        mydisp.drawImage(1, 32, &godai);
-        mydisp.setCursor(17, 36);
-        mydisp.print("Godai Group");
-        mydisp.drawImage(1, 48, &garret);
-        mydisp.setCursor(17, 52);
-        mydisp.print("Garrett Gee 2");
-        
+          Credits();
           break;
         case 2:
-        mydisp.clearScreen();
-        mydisp.setRotation(0);
-        mydisp.setTextColor(CYAN);
-        mydisp.setCursor(0, 4);
-        mydisp.print("jayconsystems.com");
-        mydisp.drawLine(0, 12, 86, 12, CYAN);
-        mydisp.setCursor(0, 20);
-        mydisp.print("hackerwarehouse.com");
-        mydisp.drawLine(0, 28, 93, 28, CYAN);
-        mydisp.setCursor(0, 36);
-        mydisp.print("godaigroup.net");
-        mydisp.drawLine(0, 44, 60, 44, CYAN);
-        mydisp.setCursor(0, 52);
-        mydisp.print("garrettgee.com");
-        mydisp.drawLine(0, 60, 64, 60, CYAN);
-
+          mydisp.clearScreen();
       }
 
       // Logic for Submenu 6
@@ -346,50 +265,26 @@ void loop()
     // Logic for Submenu 1
     if (menu.CurrentMenu==mnuRoot)
       {
+        menu.MessageBox("I am in root menu");
         //Do Nothing
       }
 
-    // Logic for Submenu 1
-    else if (menu.CurrentMenu==mnuSubmenu1)   
-      {
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,1);
-      }
+    else if (menu.CurrentMenu==mnuWiFiTools)   
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,1); }
+    else if (menu.CurrentMenu==mnuBlinky)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,2); }
 
-    // Logic for Submenu 2
-    else if (menu.CurrentMenu==mnuSubmenu2)
-      {     
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,2);
-      }
-
-    // Logic for Submenu 3
+    // not converted yet
     else if (menu.CurrentMenu==mnuSubmenu3)
-      {
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,3);
-      }
-
-    // Logic for Submenu 4
-    else if (menu.CurrentMenu==mnuSubmenu4)
-      {
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,4);
-      }
-
-    // Logic for Submenu 5
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
+    else if (menu.CurrentMenu==mnuSubmenu2)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); }
     else if (menu.CurrentMenu==mnuSubmenu5)
-      {
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,5);
-      }
-
-     // Logic for Submenu 6
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); }
     else if (menu.CurrentMenu==mnuSubmenu6)
-      {
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,6);
-      }
-
-    // Logic for Submenu 7
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); }
     else if (menu.CurrentMenu==mnuSubmenu7)
-      {
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,7);
-      }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); }
 
     else if (menu.CurrentMenu==(const char **)"SSID List")
       {

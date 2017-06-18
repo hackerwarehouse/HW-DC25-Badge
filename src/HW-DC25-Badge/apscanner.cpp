@@ -7,7 +7,7 @@
 extern SSD_13XX mydisp;
 
 //AP Scanner
-void Scanner(){
+void AP_Scanner(){
   int n = WiFi.scanNetworks();
   mydisp.clearScreen();
   for (int i=0; i<n; i++){

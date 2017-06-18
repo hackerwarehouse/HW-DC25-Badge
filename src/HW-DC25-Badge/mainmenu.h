@@ -1,3 +1,6 @@
+#ifndef HW_MAINMENU_H
+#define HW_MAINMENU_H
+
 // required for "const char" and "PROGMEM"
 #include <pgmspace.h>
 
@@ -9,11 +12,11 @@ static const char PROGMEM itmOff[] = "Off";
 static const char PROGMEM itmEnabled[] = "Enabled";
 static const char PROGMEM itmDisabled[] = "Disabled";
 
-static const char PROGMEM itmRoot[] = "Main Menu";
+//static const char PROGMEM itmRoot[] = "Main Menu";
 
-static const char PROGMEM itmSubmenu1[] = "Channel Activity";
-static const char PROGMEM itmItem1[] = "LED Chn Activity";
-static const char PROGMEM itmItem2[] = "Logo";
+//static const char PROGMEM itmWiFiTools[] = "WiFi Tools";
+//static const char PROGMEM itmItem1[] = "Channel Activity";
+//static const char PROGMEM itmItem2[] = "AP Scanner";
 
 static const char PROGMEM itmSubmenu2[] = "Customization";
 static const char PROGMEM itmItem3[] = "Nick/Alias";
@@ -22,11 +25,11 @@ static const char PROGMEM itmItem4[] = "Artwork";
 static const char PROGMEM itmSubmenu3[] = "AP Scanner";
 static const char PROGMEM itmItem5[] = "SSID List";
 
-static const char PROGMEM itmSubmenu4[] = "Blinky";
-static const char PROGMEM itmItem6[] = "Random";
-static const char PROGMEM itmItem7[] = "Cyclon";
-static const char PROGMEM itmItem8[] = "LED Chase";
-static const char PROGMEM itmItem9[] = "Flashlight";
+//static const char PROGMEM itmSubmenu4[] = "Blinky";
+//static const char PROGMEM itmItem6[] = "Random";
+//static const char PROGMEM itmItem7[] = "Cyclon";
+//static const char PROGMEM itmItem8[] = "LED Chase";
+//static const char PROGMEM itmItem9[] = "Flashlight";
 
 
 static const char PROGMEM itmSubmenu5[] = "Credits ";
@@ -41,16 +44,22 @@ static const char PROGMEM itmSubmenu7[] = "Shouts";
 // menus - first item is menu title and it does not count toward cnt
 
  const char * const mnuRoot[] PROGMEM = {
-  itmRoot,
-  itmSubmenu1,itmSubmenu2,itmSubmenu3, itmSubmenu4, itmSubmenu5, itmSubmenu6, itmSubmenu7
+  "HW-DC25 Badge",
+  "WiFi Tools","Blinky",itmSubmenu3, itmSubmenu2, itmSubmenu5, itmSubmenu6, itmSubmenu7
   }; 
  const int cntRoot PROGMEM = 7;
 
- const char * const mnuSubmenu1[] PROGMEM = {
-  itmSubmenu1,
-  itmItem1,itmItem2
+ const char * const mnuWiFiTools[] PROGMEM = {
+  "WiFi Tools",
+  "Channel Activity","AP Scanner"
   };
- const int cntSubmenu1 PROGMEM = 2;
+ const int cntWiFiTools PROGMEM = 2;
+
+ const char * const mnuBlinky[] PROGMEM = {
+  "Blinky Modes",
+  "Random", "Larson Scanner", "LED Chase", "Flashlight"
+  };  
+ const int cntBlinky PROGMEM = 4;
 
  const char * const mnuSubmenu2[]PROGMEM  = {
   itmSubmenu2,
@@ -63,12 +72,6 @@ static const char PROGMEM itmSubmenu7[] = "Shouts";
   itmItem5
   };  
  const int cntSubmenu3 PROGMEM = 1;
- 
-  const char * const mnuSubmenu4[] PROGMEM = {
-  itmSubmenu4,
-  itmItem6, itmItem7, itmItem8, itmItem9
-  };  
- const int cntSubmenu4 PROGMEM = 4;
 
   const char * const mnuSubmenu5[] PROGMEM = {
   itmSubmenu5,
@@ -87,3 +90,5 @@ static const char PROGMEM itmSubmenu7[] = "Shouts";
   itmEnabled,itmDisabled,itmBack
   };  
  const int cntSubmenu7 PROGMEM = 3;
+
+#endif
