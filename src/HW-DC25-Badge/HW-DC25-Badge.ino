@@ -82,6 +82,7 @@ void setup()
   menu.InitMenu((const char **)mnuRoot,cntRoot,1);
   pixels.begin();
   pixels.setBrightness(64); //set to 1/4 brightness overall
+  mydisp.setBrightness(4);
   all_leds_off();
   Serial.begin(115200);
 }
@@ -245,22 +246,27 @@ void loop()
         case 1:
           menu.MessageBox("Saved: Uber Low");
           pixels.setBrightness(10); 
+          mydisp.setBrightness(1);
           break;
         case 2:
           menu.MessageBox("Saved: Low");
           pixels.setBrightness(64); //set to 1/4 brightness overall
+          mydisp.setBrightness(4);
           break;
         case 3:
           menu.MessageBox("Saved: Medium");
           pixels.setBrightness(128);
+          mydisp.setBrightness(7);
           break;
         case 4:
           menu.MessageBox("Saved: High");
           pixels.setBrightness(184);
+          mydisp.setBrightness(11);
           break;
         case 5:
-          menu.MessageBox("Saved: Too Bright!");
+          menu.MessageBox("Be Careful!");
           pixels.setBrightness(255);  // highest setting
+          mydisp.setBrightness(15);
           break;
       }
 
