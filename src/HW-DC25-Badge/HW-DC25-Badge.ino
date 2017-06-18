@@ -10,12 +10,11 @@
 #include <qMenuDisplay.h>
 #include <qMenuSystem.h>
 
-#include "_images/badge.c"
 #include "_fonts/defaultFont.c"
 
+#include "about.h"
 #include "apscanner.h"
 #include "blinky.h"
-#include "credits.h"
 #include "channelactivity.h"
 #include "core.h"
 #include "mainmenu.h"
@@ -23,13 +22,6 @@
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
 qMenuSystem menu=qMenuSystem(&mydisp);
-
-//cant find where used
-//long interavl = 250;
-//long interval1 = 500;
-//unsigned long prevMillis = 0;
-//int delayval = 500;
-//bool flag = true;
 
 const byte left = 15; 
 const byte down = 10; 
@@ -74,6 +66,24 @@ void LEFT(){
   }
 }
 
+void setup()
+{  
+  pinMode(up, INPUT_PULLUP);
+  pinMode(down, INPUT_PULLUP);
+  pinMode(right, INPUT_PULLUP);
+  pinMode(left, INPUT);
+
+  attachInterrupt(digitalPinToInterrupt(up), UP, FALLING);
+  attachInterrupt(digitalPinToInterrupt(down), DOWN, FALLING);
+  attachInterrupt(digitalPinToInterrupt(right), RIGHT, FALLING);
+  attachInterrupt(digitalPinToInterrupt(left), LEFT, RISING);
+  
+  menu.InitMenu((const char **)mnuRoot,cntRoot,1);
+  pixels.begin();
+  all_leds_off();
+  Serial.begin(115200);
+}
+
 void resetMenu(){
   all_leds_off();
   mydisp.setFont(&defaultFont);
@@ -91,24 +101,6 @@ void all_leds_off(){
 void wifi_off(){
   WiFi.mode(WIFI_OFF);
   WiFi.forceSleepBegin();
-}
-
-void setup()
-{  
-  pinMode(up, INPUT_PULLUP);
-  pinMode(down, INPUT_PULLUP);
-  pinMode(right, INPUT_PULLUP);
-  pinMode(left, INPUT);
-
-  attachInterrupt(digitalPinToInterrupt(up), UP, FALLING);
-  attachInterrupt(digitalPinToInterrupt(down), DOWN, FALLING);
-  attachInterrupt(digitalPinToInterrupt(right), RIGHT, FALLING);
-  attachInterrupt(digitalPinToInterrupt(left), LEFT, RISING);
-  
-  menu.InitMenu((const char **)mnuRoot,cntRoot,1);
-  pixels.begin();
-  all_leds_off();
-  Serial.begin(115200);
 }
 
 void loop()
@@ -152,19 +144,16 @@ void loop()
           menu.InitMenu((const char ** )mnuBlinky,cntBlinky,1);
           break;
         case 3:
-          menu.InitMenu((const char ** )mnuSubmenu3,cntSubmenu3,1);
+          menu.InitMenu((const char ** )mnuAnimation,cntAnimation,1);
           break;
         case 4:
-          menu.InitMenu((const char ** )mnuSubmenu2,cntSubmenu2,1);
+          menu.InitMenu((const char ** )mnuExtra,cntExtra,1);
           break; 
          case 5:
-          menu.InitMenu((const char ** )mnuSubmenu5,cntSubmenu5,1);
+          menu.InitMenu((const char ** )mnuCustomize,cntCustomize,1);
           break;
          case 6:
-          menu.InitMenu((const char ** )mnuSubmenu6,cntSubmenu6,1);
-          break;
-         case 7:
-          menu.InitMenu((const char ** )mnuSubmenu7,cntSubmenu7,1);
+          menu.InitMenu((const char ** )mnuAbout,cntAbout,1);
           break;
       }
       
@@ -209,83 +198,66 @@ void loop()
           break;
       }
 
-      
-      
-    // Logic for Submenu 2
-    else if (menu.CurrentMenu==mnuSubmenu2)
+    else if (menu.CurrentMenu==mnuAnimation)
       switch (clickedItem)
       {
         case 1:
-        case 2:
-          break;
-      }
-      
-    // Logic for Submenu 3
-    else if (menu.CurrentMenu==mnuSubmenu3)
-      switch (clickedItem)
-      {
-        case 1:
-          menu.MessageBox("Scanning...");
+          menu.MessageBox("");
           break;
       }
 
-      // Logic for Submenu 5
-    else if (menu.CurrentMenu==mnuSubmenu5)
+    else if (menu.CurrentMenu==mnuExtra)
       switch (clickedItem)
       {
         case 1:
-          Credits();
           break;
         case 2:
           mydisp.clearScreen();
-      }
-
-      // Logic for Submenu 6
-    else if (menu.CurrentMenu==mnuSubmenu6)
-      switch (clickedItem)
-      {
-        case 1:
-        case 2:
-        case 3:
           break;
       }
 
-      // Logic for Submenu 7
-    else if (menu.CurrentMenu==mnuSubmenu7)
+    else if (menu.CurrentMenu==mnuCustomize)
       switch (clickedItem)
       {
         case 1:
+          //nick or alias setting placeholder
+          break;
         case 2:
-        case 3:
+          //artwork setting placeholder
           break;
       }
-  } 
-  
-  else if(clickedItem == -1){ // Return Logic
-    // Logic for Submenu 1
+
+    else if (menu.CurrentMenu==mnuAbout)
+      switch (clickedItem)
+      {
+        case 1:
+          SysInfo();
+          break;
+        case 2:
+          Credits();
+          break;
+      } 
+      
+  }
+
+  // menu return logic
+  else if(clickedItem == -1){
     if (menu.CurrentMenu==mnuRoot)
-      {
-        menu.MessageBox("I am in root menu");
-        //Do Nothing
-      }
-
+      { //In root menu already - Do Nothing }
     else if (menu.CurrentMenu==mnuWiFiTools)   
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,1); }
     else if (menu.CurrentMenu==mnuBlinky)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,2); }
+    else if (menu.CurrentMenu==mnuAnimation)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
+    else if (menu.CurrentMenu==mnuExtra)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); }
+    else if (menu.CurrentMenu==mnuCustomize)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); }
+    else if (menu.CurrentMenu==mnuAbout)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); }
 
     // not converted yet
-    else if (menu.CurrentMenu==mnuSubmenu3)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
-    else if (menu.CurrentMenu==mnuSubmenu2)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); }
-    else if (menu.CurrentMenu==mnuSubmenu5)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); }
-    else if (menu.CurrentMenu==mnuSubmenu6)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); }
-    else if (menu.CurrentMenu==mnuSubmenu7)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); }
-
     else if (menu.CurrentMenu==(const char **)"SSID List")
       {
         menu.InitMenu((const char ** )mnuRoot,cntRoot,3);
