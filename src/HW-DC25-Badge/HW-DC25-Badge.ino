@@ -249,7 +249,6 @@ void loop()
       {
         case 1:
           WiFi.forceSleepWake();
-          delay(1);
           WiFi.mode(WIFI_AP_STA);
           ConnectionManager();
           //if ap mode, display msg
