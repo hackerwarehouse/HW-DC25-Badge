@@ -4,7 +4,7 @@
 #include "core.h"
 
 extern SSD_13XX mydisp;
-extern byte counter;
+extern byte btncounter;
 
 unsigned long Shouts1() {
   mydisp.clearScreen();
@@ -110,7 +110,7 @@ unsigned long Shouts6() {
 }
 
 void Shouts() {
-  while (counter <= 0)
+  while (btncounter == 0)
   {
     Serial.println(Shouts1());
     delay(3000);

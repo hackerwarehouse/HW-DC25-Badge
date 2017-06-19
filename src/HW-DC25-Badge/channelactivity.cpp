@@ -8,7 +8,7 @@
 
 extern SSD_13XX mydisp;
 extern Adafruit_NeoPixel pixels;
-extern byte counter;
+extern byte btncounter;
 
 class Flasher
 {
@@ -243,7 +243,7 @@ void Channel_Activity(){
   }
 
   //Blink LEDs 
-  while (counter == 0){
+  while (btncounter == 0){
     yield();
     led1.Update();
     led2.Update();

@@ -3,7 +3,4 @@
 
 void Shouts();
 
-
-
-
 #endif
