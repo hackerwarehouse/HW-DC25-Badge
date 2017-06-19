@@ -14,8 +14,12 @@ What things you need to install the software and how to install them
 Arduino / compiler
 
 Libraries
+https://github.com/esp8266/Arduino
+  http://arduino.esp8266.com/versions/2.3.0/package_esp8266com_index.json
 https://github.com/adafruit/Adafruit_NeoPixel
 https://github.com/kitesurfer1404/WS2812FX
+
+Manually copy the two other library packages to Arduino libraries folder
 ```
 
 ### Installing
@@ -39,7 +43,7 @@ End with an example of getting some data out of the system or using it for a lit
 ## Authors / Contributors
 
 * **Garrett Gee**
-* **JS**
+* **Jaycon Systems**
 
 ## License
 

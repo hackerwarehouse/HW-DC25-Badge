@@ -1,3 +1,4 @@
+#include <ESP8266WiFi.h>
 #include <SSD_13XX.h>
 
 #include "_images/hacker.c"
@@ -25,32 +26,47 @@ void Credits()
   mydisp.print("jayconsystems.com");
 }
 
-void SysInfo()
+void Version()
 {
   mydisp.clearScreen();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(GREENYELLOW);
   mydisp.setTextScale(1);
   
-  mydisp.println("HW-DC25 Badge");
-  mydisp.println("  ver 1.0");
-  mydisp.println("  rel date 2017-07-01");
-  mydisp.println("  src on github.com");
-  mydisp.println("");
-
+  mydisp.println(F("HW-DC25 Badge"));
+  mydisp.println(F("  ver 1.0"));
+  mydisp.println(F("  rel date 2017-07-01"));
+  mydisp.println(F("  src on github.com"));
 }
 
-void HWInfo()
+void IPConfig(){
+  mydisp.clearScreen();
+  mydisp.setCursor(0, 0);
+  mydisp.setTextColor(GREENYELLOW);
+  mydisp.setTextScale(1);
+  
+  mydisp.println(F("mac addy: "));
+  String mac = WiFi.macAddress();
+  mydisp.println("  " + mac);
+  mydisp.println(F("Conn status: "));
+  mydisp.print(F("  "));
+  mydisp.println(WiFi.status());
+  mydisp.println(F("IP addy: "));
+  mydisp.print(F("  "));
+  mydisp.println(WiFi.localIP());
+}
+
+void DebugInfo()
 {
   mydisp.clearScreen();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(GREENYELLOW);
   mydisp.setTextScale(1);
-  mydisp.println(ESP.getFlashChipRealSize());
-  mydisp.println("");
-  mydisp.println("");
-  mydisp.println("");
-  mydisp.println("");
+  mydisp.println(ESP.getFlashChipSize());
+  mydisp.println(F(""));
+  mydisp.println();
+  mydisp.println(F(""));
+  mydisp.println(F(""));
 }
 
 

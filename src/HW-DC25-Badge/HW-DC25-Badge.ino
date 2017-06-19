@@ -9,6 +9,7 @@
 #include <qMenuSystem.h>
 #include <SSD_13XX.h>
 #include <WiFiClient.h>
+#include <WiFiManager.h>
 #include <WS2812FX.h>
 #include "_fonts/defaultFont.c"
 
@@ -17,6 +18,7 @@
 #include "benchmark.h"
 #include "blinky.h"
 #include "channelactivity.h"
+#include "connectionmgr.h"
 #include "core.h"
 #include "mainmenu.h"
 #include "shouts.h"
@@ -25,6 +27,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ80
 WS2812FX ws2812fx = WS2812FX(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SSD_13XX mydisp(_CS, _DC);
 qMenuSystem menu=qMenuSystem(&mydisp);
+WiFiManager wifiManager;
 
 const byte left = 15; 
 const byte down = 10; 
@@ -94,6 +97,7 @@ void setup()
   ws2812fx.setSpeed(200);
 
   all_leds_off();
+  wifi_off();           // not sure if I should keep this here
   Serial.begin(115200);
 }
 
@@ -112,6 +116,7 @@ void all_leds_off(){
 void wifi_off(){
   WiFi.mode(WIFI_OFF);
   WiFi.forceSleepBegin();
+  delay(1);
 }
 
 void loop()
@@ -158,12 +163,15 @@ void loop()
           menu.InitMenu((const char ** )mnuGraphics,cntGraphics,1);
           break;
         case 4:
-          menu.InitMenu((const char ** )mnuExtra,cntExtra,1);
+          menu.InitMenu((const char ** )mnuClient,cntClient,1);
           break; 
          case 5:
-          menu.InitMenu((const char ** )mnuSettings,cntSettings,1);
+          menu.InitMenu((const char ** )mnuExtra,cntExtra,1);
           break;
          case 6:
+          menu.InitMenu((const char ** )mnuSettings,cntSettings,1);
+          break;
+         case 7:
           menu.InitMenu((const char ** )mnuAbout,cntAbout,1);
           break;
       }
@@ -173,15 +181,20 @@ void loop()
       switch (clickedItem)
       {
         case 1:
+          WiFi.forceSleepWake();
+          WiFi.mode(WIFI_STA);
           menu.MessageBox("Scanning...");
           Channel_Activity();
           resetMenu();
+          wifi_off();
           break;
         case 2:
+          WiFi.forceSleepWake();
+          WiFi.mode(WIFI_STA);
           menu.MessageBox("Scanning...");
           AP_Scanner();
           resetMenu();
-          //wifi_off();
+          wifi_off();
           break;
       }
 
@@ -231,14 +244,43 @@ void loop()
           break;
       }
 
+    else if (menu.CurrentMenu==mnuClient)
+      switch (clickedItem)
+      {
+        case 1:
+          WiFi.forceSleepWake();
+          delay(1);
+          WiFi.mode(WIFI_AP_STA);
+          ConnectionManager();
+          //if ap mode, display msg
+          //if client mode, display msg
+          menu.MessageBox("Connected");
+          resetMenu();
+          break;
+        case 2:
+          menu.MessageBox("disconnected");
+          WiFi.disconnect(); 
+          break;
+        case 3:
+          break;
+        case 4:
+          menu.MessageBox("reset settings");
+          wifiManager.resetSettings();
+          break;
+      }
+
     else if (menu.CurrentMenu==mnuExtra)
       switch (clickedItem)
       {
         case 1:
-          Shouts();
+          menu.MessageBox("WiFi now off");
+          wifi_off();
           break;
         case 2:
-          mydisp.clearScreen();
+          menu.MessageBox("WiFi now off");
+          wifi_off();
+          break;
+        case 3:
           break;
       }
 
@@ -289,7 +331,7 @@ void loop()
           all_leds_off();
           break;
         case 5:
-          menu.MessageBox("Be Careful!");
+          menu.MessageBox("Be Careful");
           pixels.setBrightness(255);  // highest setting
           ws2812fx.setBrightness(255); // highest setting
           mydisp.setBrightness(15);
@@ -301,13 +343,19 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          SysInfo();
+          Version();
           break;
         case 2:
-          HWInfo();
+          IPConfig();
           break;
         case 3:
           Credits();
+          break;
+        case 4:
+          Shouts();
+          break;
+        case 5:
+          DebugInfo();
           break;
       } 
       
@@ -325,6 +373,8 @@ void loop()
     else if (menu.CurrentMenu==mnuBlinky)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,2); }
     else if (menu.CurrentMenu==mnuGraphics)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
+    else if (menu.CurrentMenu==mnuClient)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
     else if (menu.CurrentMenu==mnuExtra)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); }

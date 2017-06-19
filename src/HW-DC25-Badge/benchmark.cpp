@@ -43,15 +43,15 @@ unsigned long testText2() {
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(2);
-  mydisp.println("I implore thee,");
+  mydisp.println(F("I implore thee,"));
   mydisp.setTextScale(1);
-  mydisp.println("my foonting turlingdromes.");
-  mydisp.println("And hooptiously drangle me");
-  mydisp.println("with crinkly bindlewurdles,");
-  mydisp.println("Or I will rend thee");
-  mydisp.println("in the gobberwarts");
-  mydisp.println("with my blurglecruncheon,");
-  mydisp.println("see if I don't!");
+  mydisp.println(F("my foonting turlingdromes."));
+  mydisp.println(F("And hooptiously drangle me"));
+  mydisp.println(F("with crinkly bindlewurdles,"));
+  mydisp.println(F("Or I will rend thee"));
+  mydisp.println(F("in the gobberwarts"));
+  mydisp.println(F("with my blurglecruncheon,"));
+  mydisp.println(F("see if I don't!"));
   return micros() - start;
 }
 

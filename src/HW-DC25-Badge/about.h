@@ -2,8 +2,9 @@
 #define HW_ABOUT_H
 
 void Credits();
-void SysInfo();
-void HWInfo();
+void DebugInfo();
+void IPConfig();
+void Version();
 
 #endif
 

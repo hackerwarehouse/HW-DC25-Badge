@@ -11,14 +11,15 @@ static const char PROGMEM itmRoot[] = "HW-DC25 Badge";
 static const char PROGMEM itmRootWiFi[] = "WiFi Tools";
 static const char PROGMEM itmRootBlinky[] = "Blinky";
 static const char PROGMEM itmRootGrafics[] = "Graphics";
+static const char PROGMEM itmRootClient[] = "Client Tools";
 static const char PROGMEM itmRootExtras[] = "Extras";
 static const char PROGMEM itmRootSettings[] = "Settings";
 static const char PROGMEM itmRootAbout[] = "About";
 const char * const mnuRoot[] PROGMEM = {
   itmRoot,
-  itmRootWiFi,itmRootBlinky,itmRootGrafics,itmRootExtras,itmRootSettings,itmRootAbout
+  itmRootWiFi,itmRootBlinky,itmRootGrafics,itmRootClient,itmRootExtras,itmRootSettings,itmRootAbout
   }; 
-const int cntRoot PROGMEM = 6;
+const int cntRoot PROGMEM = 7;
 
 static const char PROGMEM itmWiFiTools1[] = "Channel Activity";
 static const char PROGMEM itmWiFiTools2[] = "AP Scanner";
@@ -98,13 +99,25 @@ const char * const mnuGraphics[] PROGMEM = {
   };  
 const int cntGraphics PROGMEM = 3;
 
-static const char PROGMEM itmExtra1[] = "Early Supporters";
-static const char PROGMEM itmExtra2[] = "bbb";
+static const char PROGMEM itmClient1[] = "Connect to an AP";
+static const char PROGMEM itmClient2[] = "Disconnect from AP";
+static const char PROGMEM itmClient3[] = "...";
+static const char PROGMEM itmClient4[] = "Reset conn settings";
+const char * const mnuClient[] PROGMEM = {
+  itmRootClient,
+  itmClient1,itmClient2,itmClient3,itmClient4
+  };  
+const int cntClient PROGMEM = 4;
+
+static const char PROGMEM itmExtra1[] = "WiFi off";
+static const char PROGMEM itmExtra2[] = "WiFi off";
+static const char PROGMEM itmExtra3[] = "...";
+static const char PROGMEM itmExtra4[] = "...";
 const char * const mnuExtra[] PROGMEM = {
   itmRootExtras,
-  itmExtra1,itmExtra2
+  itmExtra1,itmExtra2,itmExtra3,itmExtra4
   };  
-const int cntExtra PROGMEM = 2;
+const int cntExtra PROGMEM = 4;
 
 static const char PROGMEM itmSettings1[] = "Nick/Alias";
 static const char PROGMEM itmSettings2[] = "Artwork";
@@ -127,13 +140,15 @@ const char * const mnuBrightness[] PROGMEM = {
   };  
 const int cntBrightness PROGMEM = 5;
 
-static const char PROGMEM itmAbout1[] = "System Info";
-static const char PROGMEM itmAbout2[] = "Hardware Info";
+static const char PROGMEM itmAbout1[] = "ver";
+static const char PROGMEM itmAbout2[] = "ipconfig";
 static const char PROGMEM itmAbout3[] = "Credits";
+static const char PROGMEM itmAbout4[] = "Early Supporters";
+static const char PROGMEM itmAbout5[] = "Debug";
 const char * const mnuAbout[] PROGMEM = {
   itmRootAbout,
-  itmAbout1,itmAbout2,itmAbout3
+  itmAbout1,itmAbout2,itmAbout3,itmAbout4,itmAbout5
   };  
-const int cntAbout PROGMEM = 3;
+const int cntAbout PROGMEM = 5;
 
 #endif
