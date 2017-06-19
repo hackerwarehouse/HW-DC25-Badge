@@ -3,6 +3,7 @@
 
 void Credits();
 void SysInfo();
+void HWInfo();
 
 #endif
 

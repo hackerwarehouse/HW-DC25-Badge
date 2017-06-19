@@ -28,17 +28,29 @@ void Credits()
 void SysInfo()
 {
   mydisp.clearScreen();
-  mydisp.setRotation(0);
+  mydisp.setCursor(0, 0);
   mydisp.setTextColor(GREENYELLOW);
+  mydisp.setTextScale(1);
+  
+  mydisp.println("HW-DC25 Badge");
+  mydisp.println("  ver 1.0");
+  mydisp.println("  rel date 2017-07-01");
+  mydisp.println("  src on github.com");
+  mydisp.println("");
 
-  mydisp.setCursor(1, 4);
-  mydisp.print("HW-DC25 Badge");
-  mydisp.setCursor(1, 20);
-  mydisp.print(" ver 1.0");
-  mydisp.setCursor(1, 36);
-  mydisp.print(" rel date 2017-07-01");
-  mydisp.setCursor(1, 52);
-  mydisp.print(" src on github.com");
+}
+
+void HWInfo()
+{
+  mydisp.clearScreen();
+  mydisp.setCursor(0, 0);
+  mydisp.setTextColor(GREENYELLOW);
+  mydisp.setTextScale(1);
+  mydisp.println(ESP.getFlashChipRealSize());
+  mydisp.println("");
+  mydisp.println("");
+  mydisp.println("");
+  mydisp.println("");
 }
 
 
