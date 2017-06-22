@@ -30,9 +30,9 @@ const char * const mnuWiFiTools[] PROGMEM = {
 const int cntWiFiTools PROGMEM = 2;
 
 static const char PROGMEM itmBlinky[] = "Blinky Modes";
-static const char PROGMEM itmBlinky0[] = "Full Demo";
-static const char PROGMEM itmBlinky1[] = "Favorites";
-static const char PROGMEM itmBlinky2[] = "Flashlight";
+static const char PROGMEM itmBlinky0[] = "Favorites";
+static const char PROGMEM itmBlinky1[] = "Flashlight";
+static const char PROGMEM itmBlinky2[] = "Full Demo";
 static const char PROGMEM itmBlinky3[] = "Blink";
 static const char PROGMEM itmBlinky4[] = "Breath";
 static const char PROGMEM itmBlinky5[] = "Color Wipe";
@@ -140,7 +140,7 @@ const char * const mnuBrightness[] PROGMEM = {
   };  
 const int cntBrightness PROGMEM = 5;
 
-static const char PROGMEM itmAbout1[] = "ver";
+static const char PROGMEM itmAbout1[] = "System Info";
 static const char PROGMEM itmAbout2[] = "ipconfig";
 static const char PROGMEM itmAbout3[] = "Credits";
 static const char PROGMEM itmAbout4[] = "Early Supporters";

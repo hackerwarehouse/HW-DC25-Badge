@@ -36,40 +36,58 @@ const byte up = 0;
 
 volatile byte btncounter = 0;
 volatile byte id  = 0;
-int ledmode = 0;
+byte ledmode = 0;
+byte appmode = 0;
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
 
 void UP(){
   if((long)(micros() - last_micros) >= debouncing_time * 1000) {
-  btncounter ++;
-  id = 3;
-  last_micros = micros();
+    if (appmode){      
+    }
+    else {
+      btncounter ++;
+    }
+    id = 3;
+    last_micros = micros();
   }
 }
 
 void DOWN(){
-  if((long)(micros() - last_micros) >= debouncing_time * 1000) {
-  btncounter ++;
-  id = 2;
-  last_micros = micros();
+  if((long)(micros() - last_micros) >= debouncing_time * 1000) 
+  {
+    if (appmode){
+    }
+    else {
+      btncounter ++;
+    }
+    id = 2;
+    last_micros = micros();
   }
 }
 
 void RIGHT(){
   if((long)(micros() - last_micros) >= debouncing_time * 1000) {
-  btncounter ++;
-  id = 1;
-  last_micros = micros();
+    if (appmode){
+    }
+    else {
+      btncounter ++;
+    }
+    id = 1;
+    last_micros = micros();
   }
 }
 
 void LEFT(){
   if((long)(micros() - last_micros) >= debouncing_time * 1000) {
-  btncounter ++;
-  id = 4;
-  last_micros = micros();
+    if (appmode){
+    }
+    else {
+      btncounter ++;
+    }
+    id = 4;
+    last_micros = micros();
   }
 }
 
@@ -203,23 +221,17 @@ void loop()
       {
         case 1:
           mydisp.clearScreen();
-          LED_WS2812FX_FullDemo();
+          LED_WS2812FX_Favorites();
           resetMenu();
           break;
         case 2:
           mydisp.clearScreen();
-          LED_WS2812FX_Favorites();
+          LED_Flashlight();
           resetMenu();
           break;
          case 3:
           mydisp.clearScreen();
-          LED_Flashlight();
-          resetMenu();
-          break;
-         case 4:
-          mydisp.clearScreen();
-          ledmode = 1;
-          LED_WS2812FX();
+          LED_WS2812FX_FullDemo();
           resetMenu();
           break;
          default:
@@ -257,7 +269,7 @@ void loop()
           resetMenu();
           break;
         case 2:
-          menu.MessageBox("disconnected");
+          menu.MessageBox("Disconnected");
           WiFi.disconnect(); 
           break;
         case 3:
@@ -288,6 +300,9 @@ void loop()
       {
         case 1:
           //nick or alias setting placeholder
+          appmode=1;
+          //DebugInfo();
+          appmode=0;
           break;
         case 2:
           //artwork setting placeholder
@@ -342,7 +357,7 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          Version();
+          SysInfo();
           break;
         case 2:
           IPConfig();
@@ -374,17 +389,17 @@ void loop()
     else if (menu.CurrentMenu==mnuGraphics)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
     else if (menu.CurrentMenu==mnuClient)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
-    else if (menu.CurrentMenu==mnuExtra)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); }
-    else if (menu.CurrentMenu==mnuSettings)
+    else if (menu.CurrentMenu==mnuExtra)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); }
-    else if (menu.CurrentMenu==mnuAbout)
+    else if (menu.CurrentMenu==mnuSettings)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); }
+    else if (menu.CurrentMenu==mnuAbout)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); }
 
     //3rd level menu
     else if (menu.CurrentMenu==mnuBrightness)
-      { menu.InitMenu((const char ** )mnuSettings,cntSettings,1); }
+      { menu.InitMenu((const char ** )mnuSettings,cntSettings,3); }
 
     // not converted yet
     else if (menu.CurrentMenu==(const char **)"SSID List")

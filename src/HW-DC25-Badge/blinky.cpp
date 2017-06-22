@@ -34,7 +34,7 @@ void LED_Flashlight(){
   } 
 }
 
-#define TIMER_MS 6000
+#define TIMER_MS 7000
 void LED_WS2812FX_FullDemo(){
   unsigned long last_change = 0;
   unsigned long now = 0;
@@ -59,7 +59,7 @@ void LED_WS2812FX_Favorites(){
   ws2812fx.setMode(FX_MODE_RANDOM_COLOR);
   ws2812fx.start();
 
-  int favs[] = { 6, 16, 8, 14, 40, 7, 43, 10, 19, 41 };
+  int favs[] = { 7, 40, 43, 10, 16, 8, 14, 19, 41 };
   int favs_current = 0;
   int favs_cnt = 9;
   while (btncounter == 0)

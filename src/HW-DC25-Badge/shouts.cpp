@@ -4,6 +4,8 @@
 #include "core.h"
 
 extern SSD_13XX mydisp;
+extern volatile byte id;
+extern byte appmode;
 extern byte btncounter;
 
 unsigned long Shouts1() {
@@ -110,25 +112,56 @@ unsigned long Shouts6() {
 }
 
 void Shouts() {
-  while (btncounter == 0)
+  appmode=1;
+  int count=1;
+  int last=0;
+  id = 0;
+  while (1)
   {
-    Serial.println(Shouts1());
-    delay(3000);
-    if (btncounter > 0) { break; }
-    Serial.println(Shouts2());
-    delay(3000);
-    if (btncounter > 0) { break; }
-    Serial.println(Shouts3());
-    delay(3000);
-    if (btncounter > 0) { break; }
-    Serial.println(Shouts4());
-    delay(3000);
-    if (btncounter > 0) { break; }
-    Serial.println(Shouts5());
-    delay(3000);
-    if (btncounter > 0) { break; }
-    Serial.println(Shouts6());
-    delay(3000);
-    if (btncounter > 0) { break; }
+    if (id == 3){ 
+      if (count == 1) {count = 6; } 
+      else {count--;}
+      id = 0;
+    }
+    else if (id == 2){ 
+      if (count == 6) {count = 1; } 
+      else {count++;}
+      id = 0;
+    }
+    else if (id == 4) {break;}
+
+    if (count != last)
+    {
+      switch(count)
+      {
+       case 1:
+          Serial.println(Shouts1());
+          last=1;
+          break;
+       case 2:
+          Serial.println(Shouts2());
+          last=2;
+          break;
+       case 3:
+          Serial.println(Shouts3());
+          last=3;
+          break;
+       case 4:
+          Serial.println(Shouts4());
+          last=4;
+          break;
+       case 5:
+          Serial.println(Shouts5());
+          last=5;
+          break;
+       case 6:
+          Serial.println(Shouts6());
+          last=6;
+          break;
+      }
+    }
+    delay(100);
   }
+  appmode=0;
+  btncounter++;
 }

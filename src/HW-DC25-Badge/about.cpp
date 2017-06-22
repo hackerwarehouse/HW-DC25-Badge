@@ -26,7 +26,7 @@ void Credits()
   mydisp.print("jayconsystems.com");
 }
 
-void Version()
+void SysInfo()
 {
   mydisp.clearScreen();
   mydisp.setCursor(0, 0);

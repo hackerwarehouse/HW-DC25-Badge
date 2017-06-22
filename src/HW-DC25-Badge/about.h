@@ -4,7 +4,7 @@
 void Credits();
 void DebugInfo();
 void IPConfig();
-void Version();
+void SysInfo();
 
 #endif
 
