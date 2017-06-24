@@ -41,6 +41,7 @@ volatile byte id  = 0;
 byte ledmode = 0;
 byte appmode = 0;
 volatile byte region_id = 1;
+volatile byte mydispbrightness;
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
@@ -137,13 +138,13 @@ void loadSettings(){
   }
   pixels.setBrightness(value);
 
-  value = EEPROM.read(MYDISPBRIGHT_ADDR);
-  if (value == 255){
+  mydispbrightness = EEPROM.read(MYDISPBRIGHT_ADDR);
+  if (mydispbrightness == 255){
     value = 4;                              //default 4 ~ 1/4 brightness overall
-    EEPROM.write(MYDISPBRIGHT_ADDR,value);  
+    EEPROM.write(MYDISPBRIGHT_ADDR,mydispbrightness);  
     EEPROM.commit();
   }
-  mydisp.setBrightness(value);
+  mydisp.setBrightness(mydispbrightness);
 
   value = EEPROM.read(WS2812FXBRIGHT_ADDR);
   if (value == 255){
@@ -208,24 +209,31 @@ void loop()
       {
         case 1:
           menu.InitMenu((const char ** )mnuWiFiTools,cntWiFiTools,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
         case 2:
           menu.InitMenu((const char ** )mnuBlinky,cntBlinky,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
         case 3:
           menu.InitMenu((const char ** )mnuGraphics,cntGraphics,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
         case 4:
           menu.InitMenu((const char ** )mnuClient,cntClient,1);
+          mydisp.setBrightness(mydispbrightness);
           break; 
          case 5:
           menu.InitMenu((const char ** )mnuExtra,cntExtra,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
          case 6:
           menu.InitMenu((const char ** )mnuSettings,cntSettings,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
          case 7:
           menu.InitMenu((const char ** )mnuAbout,cntAbout,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
       }
 
@@ -344,9 +352,11 @@ void loop()
           break;
         case 3:
           menu.InitMenu((const char ** )mnuBrightness,cntBrightness,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
         case 4:
           menu.InitMenu((const char ** )mnuRegion,cntRegion,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
       }
 
@@ -423,31 +433,39 @@ void loop()
 
     //2nd level menus
     else if (menu.CurrentMenu==mnuWiFiTools)   
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,1); }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,1); 
+        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuBlinky)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,2); }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,2); 
+        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuGraphics)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); 
+        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuClient)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); 
+        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuExtra)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); 
+        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuSettings)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); 
+        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuAbout)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); 
+        mydisp.setBrightness(mydispbrightness);}
 
     //3rd level menus
     else if (menu.CurrentMenu==mnuBrightness)
-      { menu.InitMenu((const char ** )mnuSettings,cntSettings,3); }
+      { menu.InitMenu((const char ** )mnuSettings,cntSettings,3); 
+        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuRegion)
-      { menu.InitMenu((const char ** )mnuSettings,cntSettings,4); }
+      { menu.InitMenu((const char ** )mnuSettings,cntSettings,4); 
+        mydisp.setBrightness(mydispbrightness);}
 
     // not converted yet
     else if (menu.CurrentMenu==(const char **)"SSID List")
-      {
-        menu.InitMenu((const char ** )mnuRoot,cntRoot,3);
-      }
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3);
+        mydisp.setBrightness(mydispbrightness); }
    }
  }
 
