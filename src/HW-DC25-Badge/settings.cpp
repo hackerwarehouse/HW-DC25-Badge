@@ -19,8 +19,52 @@ extern byte btncounter;
 
 #include "core.h"
 
-void SelectArtwork(){
+void DisplayArtwork(byte img){
   int h, w, buffidx;
+  switch(img)
+  {
+   case 1:
+      h = 63;
+      w = 73;
+      buffidx = 0;
+      mydisp.clearScreen();
+      for (int row=0; row<h; row++) {
+        for (int col=0; col<w; col++) { 
+          mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+   case 2:
+      h = 63;
+      w = 63;
+      buffidx = 0;
+      mydisp.clearScreen();
+      //mydisp.drawImage(17,0,&godai_1);
+      for (int row=0; row<h; row++) {
+        for (int col=0; col<w; col++) { 
+          mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+   case 3:
+      h = 25;
+      w = 96;
+      buffidx = 0;
+      mydisp.clearScreen(); 
+      //mydisp.drawImage(0,20,&defcon);
+      for (int row=0; row<h; row++) {
+        for (int col=0; col<w; col++) { 
+          mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+  }
+}
+
+void SelectArtwork(){
   appmode=1;
   int count=1;
   int last=0;
@@ -56,45 +100,16 @@ void SelectArtwork(){
       switch(count)
       {
        case 1:
-          h = 63;
-          w = 73;
-          buffidx = 0;
-          mydisp.clearScreen();
-          for (int row=0; row<h; row++) {
-            for (int col=0; col<w; col++) { 
-              mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
-              buffidx++;
-            } 
-          }
           last=1;
+          DisplayArtwork(last);
           break;
        case 2:
-          h = 63;
-          w = 63;
-          buffidx = 0;
-          mydisp.clearScreen();
-          //mydisp.drawImage(17,0,&godai_1);
-          for (int row=0; row<h; row++) {
-            for (int col=0; col<w; col++) { 
-              mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
-              buffidx++;
-            } 
-          }
           last=2;
+          DisplayArtwork(last);
           break;
        case 3:
-          h = 25;
-          w = 96;
-          buffidx = 0;
-          mydisp.clearScreen(); 
-          //mydisp.drawImage(0,20,&defcon);
-          for (int row=0; row<h; row++) {
-            for (int col=0; col<w; col++) { 
-              mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
-              buffidx++;
-            } 
-          }
           last=3;
+          DisplayArtwork(last);
           break;
       }
     }
