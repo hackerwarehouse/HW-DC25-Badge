@@ -120,41 +120,6 @@ void setup()
   Serial.begin(115200);
 }
 
-void loadSettings(){
-  EEPROM.begin(512);  //Set eeprom - 512 bytes
-  byte value=0;
-
-  region_id = EEPROM.read(REGION_ADDR);
-  if (region_id == 255){
-    EEPROM.write(REGION_ADDR,1);  //default 1 -> US
-    EEPROM.commit();
-  }
-
-  value = EEPROM.read(PIXELBRIGHT_ADDR);
-  if (value == 255){
-    value = 64;                             //default 64 ~ 1/4 brightness overall
-    EEPROM.write(PIXELBRIGHT_ADDR,value);
-    EEPROM.commit();
-  }
-  pixels.setBrightness(value);
-
-  mydispbrightness = EEPROM.read(MYDISPBRIGHT_ADDR);
-  if (mydispbrightness == 255){
-    value = 4;                              //default 4 ~ 1/4 brightness overall
-    EEPROM.write(MYDISPBRIGHT_ADDR,mydispbrightness);  
-    EEPROM.commit();
-  }
-  mydisp.setBrightness(mydispbrightness);
-
-  value = EEPROM.read(WS2812FXBRIGHT_ADDR);
-  if (value == 255){
-    value = 64;                              //default 64 ~ 1/4 brightness overall
-    EEPROM.write(WS2812FXBRIGHT_ADDR,value); 
-    EEPROM.commit();
-  }
-  ws2812fx.setBrightness(value);
-}
-
 void menu_reset(){
   all_leds_off();
   mydisp.setFont(&defaultFont);

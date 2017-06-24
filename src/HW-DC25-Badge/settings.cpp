@@ -8,16 +8,53 @@
 #include "_images/godai_1.c"
 #include "_images/defcon.c"
 
+extern void all_leds_off();
 extern Adafruit_NeoPixel pixels;
 extern WS2812FX ws2812fx;
 extern SSD_13XX mydisp;
-extern void all_leds_off();
-extern byte mydispbrightness;
 extern byte appmode;
-extern volatile byte id;
 extern byte btncounter;
+extern volatile byte id;
+extern byte mydispbrightness;
+extern byte region_id;
 
 #include "core.h"
+
+void loadSettings(){
+  EEPROM.begin(512);  //Set eeprom - 512 bytes
+  byte value=0;
+
+  region_id = EEPROM.read(REGION_ADDR);
+  if (region_id == 255){
+    EEPROM.write(REGION_ADDR,1);  //default 1 -> US
+    EEPROM.commit();
+    region_id = 1;
+  }
+
+  value = EEPROM.read(PIXELBRIGHT_ADDR);
+  if (value == 255){
+    value = 64;                             //default 64 ~ 1/4 brightness overall
+    EEPROM.write(PIXELBRIGHT_ADDR,value);
+    EEPROM.commit();
+  }
+  pixels.setBrightness(value);
+
+  mydispbrightness = EEPROM.read(MYDISPBRIGHT_ADDR);
+  if (mydispbrightness == 255){
+    value = 4;                              //default 4 ~ 1/4 brightness overall
+    EEPROM.write(MYDISPBRIGHT_ADDR,mydispbrightness);  
+    EEPROM.commit();
+  }
+  mydisp.setBrightness(mydispbrightness);
+
+  value = EEPROM.read(WS2812FXBRIGHT_ADDR);
+  if (value == 255){
+    value = 64;                              //default 64 ~ 1/4 brightness overall
+    EEPROM.write(WS2812FXBRIGHT_ADDR,value); 
+    EEPROM.commit();
+  }
+  ws2812fx.setBrightness(value);
+}
 
 void DisplayArtwork(byte img){
   int h, w, buffidx;
