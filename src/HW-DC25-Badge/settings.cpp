@@ -7,6 +7,7 @@
 #include "_images/badge.c"
 #include "_images/godai_1.c"
 #include "_images/defcon.c"
+#include "_images/hackerwarehouse.c"
 
 extern void all_leds_off();
 extern Adafruit_NeoPixel pixels;
@@ -58,42 +59,53 @@ void loadSettings(){
 
 void DisplayArtwork(byte img){
   int h, w, buffidx;
+  int row, col;
   switch(img)
   {
    case 1:
-      h = 63;
-      w = 73;
+      h = 31;
+      w = 95;
       buffidx = 0;
-      mydisp.clearScreen();
-      for (int row=0; row<h; row++) {
-        for (int col=0; col<w; col++) { 
-          mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+      mydisp.clearScreen(); 
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col, row+20, pgm_read_word(image_data_hackerwarehouse + buffidx));
           buffidx++;
         } 
       }
       break;
    case 2:
-      h = 63;
-      w = 63;
+      h = 25;
+      w = 96;
       buffidx = 0;
-      mydisp.clearScreen();
-      //mydisp.drawImage(17,0,&godai_1);
-      for (int row=0; row<h; row++) {
-        for (int col=0; col<w; col++) { 
-          mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+      mydisp.clearScreen(); 
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
           buffidx++;
         } 
       }
       break;
    case 3:
-      h = 25;
-      w = 96;
+      h = 63;
+      w = 73;
       buffidx = 0;
-      mydisp.clearScreen(); 
-      //mydisp.drawImage(0,20,&defcon);
-      for (int row=0; row<h; row++) {
-        for (int col=0; col<w; col++) { 
-          mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+      mydisp.clearScreen();
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+   case 4:
+      h = 63;
+      w = 63;
+      buffidx = 0;
+      mydisp.clearScreen();
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
           buffidx++;
         } 
       }
@@ -103,18 +115,18 @@ void DisplayArtwork(byte img){
 
 void SelectArtwork(){
   appmode=1;
-  int count=1;
-  int last=0;
+  byte count=1;
+  byte last=0;
   id = 0;
   while (1)
   {
     if (id == 3){ 
-      if (count == 1) {count = 3; } 
+      if (count == 1) {count = 4; } 
       else {count--;}
       id = 0;
     }
     else if (id == 2){ 
-      if (count == 3) {count = 1; } 
+      if (count == 4) {count = 1; } 
       else {count++;}
       id = 0;
     }
@@ -134,21 +146,8 @@ void SelectArtwork(){
 
     if (count != last)
     {
-      switch(count)
-      {
-       case 1:
-          last=1;
-          DisplayArtwork(last);
-          break;
-       case 2:
-          last=2;
-          DisplayArtwork(last);
-          break;
-       case 3:
-          last=3;
-          DisplayArtwork(last);
-          break;
-      }
+      last=count;
+      DisplayArtwork(last); 
     }
     delay(100);
   }
