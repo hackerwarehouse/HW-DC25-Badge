@@ -22,6 +22,7 @@
 #include "connectionmgr.h"
 #include "core.h"
 #include "mainmenu.h"
+#include "settings.h"
 #include "shouts.h"
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -98,7 +99,7 @@ void setup()
   pinMode(up, INPUT_PULLUP);
   pinMode(down, INPUT_PULLUP);
   pinMode(right, INPUT_PULLUP);
-  pinMode(left, INPUT);
+  pinMode(left, INPUT);           //External pulldown resistor (required for programming)
 
   attachInterrupt(digitalPinToInterrupt(up), UP, FALLING);
   attachInterrupt(digitalPinToInterrupt(down), DOWN, FALLING);
@@ -353,59 +354,24 @@ void loop()
       switch (clickedItem)
       {
         case 1:
+          SaveBrightness(10,1);
           menu.MessageBox("Saved: Uber Low");
-          pixels.setBrightness(10); 
-          ws2812fx.setBrightness(10);
-          mydisp.setBrightness(1);
-          all_leds_off();
-          EEPROM.write(PIXELBRIGHT_ADDR,10);
-          EEPROM.write(MYDISPBRIGHT_ADDR,1);
-          EEPROM.write(WS2812FXBRIGHT_ADDR,10);
-          EEPROM.commit();
           break;
         case 2:
+          SaveBrightness(64,4);
           menu.MessageBox("Saved: Low");
-          pixels.setBrightness(64); //set to 1/4 brightness overall
-          ws2812fx.setBrightness(64);
-          mydisp.setBrightness(4);
-          all_leds_off();
-          EEPROM.write(PIXELBRIGHT_ADDR,64);
-          EEPROM.write(MYDISPBRIGHT_ADDR,4);
-          EEPROM.write(WS2812FXBRIGHT_ADDR,64);
-          EEPROM.commit();
           break;
         case 3:
+          SaveBrightness(128,7);
           menu.MessageBox("Saved: Medium");
-          pixels.setBrightness(128);
-          ws2812fx.setBrightness(128);
-          mydisp.setBrightness(7);
-          all_leds_off();
-          EEPROM.write(PIXELBRIGHT_ADDR,128);
-          EEPROM.write(MYDISPBRIGHT_ADDR,7);
-          EEPROM.write(WS2812FXBRIGHT_ADDR,128);
-          EEPROM.commit();
           break;
         case 4:
+          SaveBrightness(184,11);
           menu.MessageBox("Saved: High");
-          pixels.setBrightness(184);
-          ws2812fx.setBrightness(184);
-          mydisp.setBrightness(11);
-          all_leds_off();
-          EEPROM.write(PIXELBRIGHT_ADDR,184);
-          EEPROM.write(MYDISPBRIGHT_ADDR,11);
-          EEPROM.write(WS2812FXBRIGHT_ADDR,184);
-          EEPROM.commit();
           break;
         case 5:
+          SaveBrightness(254,15);
           menu.MessageBox("Be Careful");
-          pixels.setBrightness(254);  // highest setting
-          ws2812fx.setBrightness(254); // highest setting
-          mydisp.setBrightness(15);
-          all_leds_off();
-          EEPROM.write(PIXELBRIGHT_ADDR,254);
-          EEPROM.write(MYDISPBRIGHT_ADDR,15);
-          EEPROM.write(WS2812FXBRIGHT_ADDR,254);
-          EEPROM.commit();
           break;
       }
       
