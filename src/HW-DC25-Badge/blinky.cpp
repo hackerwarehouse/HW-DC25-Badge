@@ -44,8 +44,8 @@ void LED_WS2812FX_Favorites(){
   ws2812fx.setMode(FX_MODE_TWINKLE_RANDOM);
   ws2812fx.start();
 
-  byte favs[] = { 7, 40, 43, 10, 16, 8, 14, 19, 41 };
-  byte favs_cnt = 9;
+  byte favs[] = { 7, 40, 43, 10, 17, 8, 14, 19, 41 };
+  byte favs_cnt = 8;
   byte favs_current = 0;
   while (btncounter == 0)
     {
