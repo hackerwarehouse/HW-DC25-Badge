@@ -17,9 +17,6 @@ void ConnectionManager(){
   if(!wifiManager.autoConnect("HW-DC25 AP")) 
     {
     Serial.println("failed to connect and hit timeout");
-    delay(3000);
-    ESP.reset();
-    delay(5000);
     }
 }
 

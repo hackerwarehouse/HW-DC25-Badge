@@ -9,6 +9,7 @@
 extern SSD_13XX mydisp;
 extern Adafruit_NeoPixel pixels;
 extern byte btncounter;
+extern byte region_id;
 
 class Flasher
 {
@@ -199,11 +200,24 @@ void Channel_Activity(){
   mydisp.setFont(&channels);
   mydisp.setTextColor(WHITE);
   mydisp.setCursor(0,53);
-  mydisp.print("1 2 3 4 5 6 7 8 9 10 11 12 13");
+  if (region_id == 1){  //US
+    mydisp.print("1 2 3 4 5 6 7 8 9 10 11");
+    mydisp.print(" ");
+    mydisp.setTextColor(RED);
+    mydisp.print("12 13");
+  }
+  else if (region_id == 2)  //EU
+    mydisp.print("1 2 3 4 5 6 7 8 9 10 11 12 13");
   mydisp.drawLine(0, 53, 95, 53, ORANGE);
+  mydisp.setTextColor(WHITE);
 
   //Draw Bar Graph
-  for(int i =0; i<14; i++){
+  byte num_chns;
+  if(region_id == 1) //US
+     num_chns = 11;
+  else if (region_id == 2) // EU
+     num_chns = 13;
+  for(int i=0; i<num_chns; i++){
     if(i<9){
       if(times[i]==1000){
         mydisp.fillRect(i*6,53-chn[i]*mult,3,chn[i]*mult,GREEN);
@@ -256,8 +270,10 @@ void Channel_Activity(){
     led9.Update();
     led10.Update();
     led11.Update();
-    led12.Update();
-    led13.Update();
-    led14.Update();
+    if (region_id == 2) {
+      led12.Update();
+      led13.Update();
+    }
+    //led14.Update();
   }
 }

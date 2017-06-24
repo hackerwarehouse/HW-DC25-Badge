@@ -1,6 +1,7 @@
 #ifdef __AVR__
   #include <avr/power.h>
 #endif
+#include <EEPROM.h>
 #include <SPI.h>
 
 #include <Adafruit_NeoPixel.h>
@@ -38,6 +39,7 @@ volatile byte btncounter = 0;
 volatile byte id  = 0;
 byte ledmode = 0;
 byte appmode = 0;
+volatile byte region_id = 1;
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
@@ -102,21 +104,53 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(down), DOWN, FALLING);
   attachInterrupt(digitalPinToInterrupt(right), RIGHT, FALLING);
   attachInterrupt(digitalPinToInterrupt(left), LEFT, RISING);
-  
+
   menu.InitMenu((const char **)mnuRoot,cntRoot,1);
 
   pixels.begin();
-  pixels.setBrightness(64); //set to 1/4 brightness overall
-  
-  mydisp.setBrightness(4);
-  
   ws2812fx.init();
-  ws2812fx.setBrightness(64);
   ws2812fx.setSpeed(200);
 
+  loadSettings();
   all_leds_off();
   wifi_off();           // not sure if I should keep this here
+  
   Serial.begin(115200);
+}
+
+void loadSettings(){
+  EEPROM.begin(512);  //Set eeprom - 512 bytes
+  byte value=0;
+
+  region_id = EEPROM.read(REGION_ADDR);
+  if (region_id == 255){
+    EEPROM.write(REGION_ADDR,1);  //default 1 -> US
+    EEPROM.commit();
+  }
+
+  value = EEPROM.read(PIXELBRIGHT_ADDR);
+  if (value == 255){
+    value = 64;                             //default 64 ~ 1/4 brightness overall
+    EEPROM.write(PIXELBRIGHT_ADDR,value);
+    EEPROM.commit();
+  }
+  pixels.setBrightness(value);
+
+  value = EEPROM.read(MYDISPBRIGHT_ADDR);
+  if (value == 255){
+    value = 4;                              //default 4 ~ 1/4 brightness overall
+    EEPROM.write(MYDISPBRIGHT_ADDR,value);  
+    EEPROM.commit();
+  }
+  mydisp.setBrightness(value);
+
+  value = EEPROM.read(WS2812FXBRIGHT_ADDR);
+  if (value == 255){
+    value = 64;                              //default 64 ~ 1/4 brightness overall
+    EEPROM.write(WS2812FXBRIGHT_ADDR,value); 
+    EEPROM.commit();
+  }
+  ws2812fx.setBrightness(value);
 }
 
 void resetMenu(){
@@ -308,8 +342,10 @@ void loop()
           //artwork setting placeholder
           break;
         case 3:
-          //Setting_Brightness();
           menu.InitMenu((const char ** )mnuBrightness,cntBrightness,1);
+          break;
+        case 4:
+          menu.InitMenu((const char ** )mnuRegion,cntRegion,1);
           break;
       }
 
@@ -322,6 +358,10 @@ void loop()
           ws2812fx.setBrightness(10);
           mydisp.setBrightness(1);
           all_leds_off();
+          EEPROM.write(PIXELBRIGHT_ADDR,10);
+          EEPROM.write(MYDISPBRIGHT_ADDR,1);
+          EEPROM.write(WS2812FXBRIGHT_ADDR,10);
+          EEPROM.commit();
           break;
         case 2:
           menu.MessageBox("Saved: Low");
@@ -329,6 +369,10 @@ void loop()
           ws2812fx.setBrightness(64);
           mydisp.setBrightness(4);
           all_leds_off();
+          EEPROM.write(PIXELBRIGHT_ADDR,64);
+          EEPROM.write(MYDISPBRIGHT_ADDR,4);
+          EEPROM.write(WS2812FXBRIGHT_ADDR,64);
+          EEPROM.commit();
           break;
         case 3:
           menu.MessageBox("Saved: Medium");
@@ -336,6 +380,10 @@ void loop()
           ws2812fx.setBrightness(128);
           mydisp.setBrightness(7);
           all_leds_off();
+          EEPROM.write(PIXELBRIGHT_ADDR,128);
+          EEPROM.write(MYDISPBRIGHT_ADDR,7);
+          EEPROM.write(WS2812FXBRIGHT_ADDR,128);
+          EEPROM.commit();
           break;
         case 4:
           menu.MessageBox("Saved: High");
@@ -343,14 +391,40 @@ void loop()
           ws2812fx.setBrightness(184);
           mydisp.setBrightness(11);
           all_leds_off();
+          EEPROM.write(PIXELBRIGHT_ADDR,184);
+          EEPROM.write(MYDISPBRIGHT_ADDR,11);
+          EEPROM.write(WS2812FXBRIGHT_ADDR,184);
+          EEPROM.commit();
           break;
         case 5:
           menu.MessageBox("Be Careful");
-          pixels.setBrightness(255);  // highest setting
-          ws2812fx.setBrightness(255); // highest setting
+          pixels.setBrightness(254);  // highest setting
+          ws2812fx.setBrightness(254); // highest setting
           mydisp.setBrightness(15);
           all_leds_off();
+          EEPROM.write(PIXELBRIGHT_ADDR,254);
+          EEPROM.write(MYDISPBRIGHT_ADDR,15);
+          EEPROM.write(WS2812FXBRIGHT_ADDR,254);
+          EEPROM.commit();
           break;
+      }
+      
+    else if (menu.CurrentMenu==mnuRegion)
+      switch (clickedItem)
+      {
+        case 1:
+        region_id = 1;  //US
+        EEPROM.write(REGION_ADDR,region_id);  
+        EEPROM.commit();
+        menu.MessageBox("Region Set: US");
+        break;
+        
+        case 2:
+        region_id = 2;  //EU
+        EEPROM.write(REGION_ADDR,region_id);  
+        EEPROM.commit();
+        menu.MessageBox("Region Set: EU");
+        break;      
       }
 
     else if (menu.CurrentMenu==mnuAbout)
@@ -397,9 +471,11 @@ void loop()
     else if (menu.CurrentMenu==mnuAbout)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); }
 
-    //3rd level menu
+    //3rd level menus
     else if (menu.CurrentMenu==mnuBrightness)
       { menu.InitMenu((const char ** )mnuSettings,cntSettings,3); }
+    else if (menu.CurrentMenu==mnuRegion)
+      { menu.InitMenu((const char ** )mnuSettings,cntSettings,4); }
 
     // not converted yet
     else if (menu.CurrentMenu==(const char **)"SSID List")

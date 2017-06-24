@@ -4,8 +4,7 @@
 // required for "const char" and "PROGMEM"
 #include <pgmspace.h>
 
-////////////////////////////////////////////////////////////////
-// menus - first item is menu title and it does not count toward cnt
+// mnu* note - first item is menu title and it does not count toward cnt
 
 static const char PROGMEM itmRoot[] = "HW-DC25 Badge";
 static const char PROGMEM itmRootWiFi[] = "WiFi Tools";
@@ -122,11 +121,12 @@ const int cntExtra PROGMEM = 4;
 static const char PROGMEM itmSettings1[] = "Nick/Alias";
 static const char PROGMEM itmSettings2[] = "Artwork";
 static const char PROGMEM itmSettings3[] = "Brightness";
+static const char PROGMEM itmSettings4[] = "Region";
 const char * const mnuSettings[]PROGMEM  = {
   itmRootSettings,
-  itmSettings1,itmSettings2,itmSettings3
+  itmSettings1,itmSettings2,itmSettings3,itmSettings4
   }; 
-const int cntSettings PROGMEM = 3;
+const int cntSettings PROGMEM = 4;
 
 static const char PROGMEM itmBrightness[] = "Brightness Setting";
 static const char PROGMEM itmBrightness1[] = "Uber Low";
@@ -139,6 +139,15 @@ const char * const mnuBrightness[] PROGMEM = {
   itmBrightness1,itmBrightness2,itmBrightness3,itmBrightness4,itmBrightness5
   };  
 const int cntBrightness PROGMEM = 5;
+
+static const char PROGMEM itmRegion[] = "Region Setting";
+static const char PROGMEM itmRegion1[] = "United States";
+static const char PROGMEM itmRegion2[] = "European Union";
+const char * const mnuRegion[] PROGMEM = {
+  itmRegion,
+  itmRegion1,itmRegion2
+  };  
+const int cntRegion PROGMEM = 2;
 
 static const char PROGMEM itmAbout1[] = "System Info";
 static const char PROGMEM itmAbout2[] = "ipconfig";

@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 #include <ESP8266WiFi.h>
 #include <SSD_13XX.h>
 
@@ -63,10 +65,14 @@ void DebugInfo()
   mydisp.setTextColor(GREENYELLOW);
   mydisp.setTextScale(1);
   mydisp.println(ESP.getFlashChipSize());
-  mydisp.println(F(""));
-  mydisp.println();
-  mydisp.println(F(""));
-  mydisp.println(F(""));
+  byte value = EEPROM.read(REGION_ADDR);
+  mydisp.println(value);
+  value = EEPROM.read(PIXELBRIGHT_ADDR);
+  mydisp.println(value);
+  value = EEPROM.read(MYDISPBRIGHT_ADDR);
+  mydisp.println(value);
+  value = EEPROM.read(WS2812FXBRIGHT_ADDR);
+  mydisp.println(value);
 }
 
 
