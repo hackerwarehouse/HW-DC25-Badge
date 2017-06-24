@@ -11,6 +11,7 @@
 #define PIXELBRIGHT_ADDR 2      //1 byte
 #define MYDISPBRIGHT_ADDR 3     //1 byte
 #define WS2812FXBRIGHT_ADDR 4   //1 byte
+#define ARTWORK_ADDR 5          //1 byte
 
 #endif
 

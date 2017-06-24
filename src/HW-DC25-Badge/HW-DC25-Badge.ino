@@ -155,7 +155,7 @@ void loadSettings(){
   ws2812fx.setBrightness(value);
 }
 
-void resetMenu(){
+void menu_reset(){
   all_leds_off();
   mydisp.setFont(&defaultFont);
 }
@@ -171,6 +171,11 @@ void wifi_off(){
   WiFi.mode(WIFI_OFF);
   WiFi.forceSleepBegin();
   delay(1);
+}
+
+void menu_force_escape(){
+  id = 4;
+  btncounter++;
 }
 
 void loop()
@@ -246,7 +251,7 @@ void loop()
           WiFi.mode(WIFI_STA);
           menu.MessageBox("Scanning...");
           Channel_Activity();
-          resetMenu();
+          menu_reset();
           wifi_off();
           break;
         case 2:
@@ -254,7 +259,7 @@ void loop()
           WiFi.mode(WIFI_STA);
           menu.MessageBox("Scanning...");
           AP_Scanner();
-          resetMenu();
+          menu_reset();
           wifi_off();
           break;
       }
@@ -265,23 +270,23 @@ void loop()
         case 1:
           mydisp.clearScreen();
           LED_WS2812FX_Favorites();
-          resetMenu();
+          menu_reset();
           break;
         case 2:
           mydisp.clearScreen();
           LED_Flashlight();
-          resetMenu();
+          menu_reset();
           break;
          case 3:
           mydisp.clearScreen();
           LED_WS2812FX_FullDemo();
-          resetMenu();
+          menu_reset();
           break;
          default:
           mydisp.clearScreen();
           ledmode = clickedItem - 3;
           LED_WS2812FX();
-          resetMenu();
+          menu_reset();
           break; 
       }
 
@@ -309,7 +314,7 @@ void loop()
           //if ap mode, display msg
           //if client mode, display msg
           menu.MessageBox("Connected");
-          resetMenu();
+          menu_reset();
           break;
         case 2:
           menu.MessageBox("Disconnected");
@@ -348,7 +353,7 @@ void loop()
           appmode=0;
           break;
         case 2:
-          //artwork setting placeholder
+          SelectArtwork();
           break;
         case 3:
           menu.InitMenu((const char ** )mnuBrightness,cntBrightness,1);
@@ -366,22 +371,32 @@ void loop()
         case 1:
           SaveBrightness(10,1);
           menu.MessageBox("Saved: Uber Low");
+          delay(1000);
+          menu_force_escape();
           break;
         case 2:
           SaveBrightness(64,4);
           menu.MessageBox("Saved: Low");
+          delay(1000);
+          menu_force_escape();
           break;
         case 3:
           SaveBrightness(128,7);
           menu.MessageBox("Saved: Medium");
+          delay(1000);
+          menu_force_escape();
           break;
         case 4:
           SaveBrightness(184,11);
           menu.MessageBox("Saved: High");
+          delay(1000);
+          menu_force_escape();
           break;
         case 5:
           SaveBrightness(254,15);
           menu.MessageBox("Be Careful");
+          delay(1000);
+          menu_force_escape();
           break;
       }
       

@@ -3,8 +3,8 @@
 #include <ESP8266WiFi.h>
 #include <SSD_13XX.h>
 
-#include "_images/hacker.c"
-#include "_images/js.c"
+#include "_images/hacker_sm.c"
+#include "_images/js_sm.c"
 #include "core.h"
 
 extern SSD_13XX mydisp;
@@ -72,6 +72,8 @@ void DebugInfo()
   value = EEPROM.read(MYDISPBRIGHT_ADDR);
   mydisp.println(value);
   value = EEPROM.read(WS2812FXBRIGHT_ADDR);
+  mydisp.println(value);
+  value = EEPROM.read(ARTWORK_ADDR);
   mydisp.println(value);
 }
 
