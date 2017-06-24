@@ -38,7 +38,7 @@ const byte up = 0;
 
 volatile byte btncounter = 0;
 volatile byte id  = 0;
-byte ledmode = 0;
+//byte ledmode = 0;
 byte appmode = 0;
 volatile byte region_id = 1;
 volatile byte mydispbrightness;
@@ -249,8 +249,8 @@ void loop()
           break;
          default:
           mydisp.clearScreen();
-          ledmode = clickedItem - 3;
-          LED_WS2812FX();
+          byte ledmode = clickedItem - 3;
+          LED_WS2812FX(ledmode);
           menu_reset();
           break; 
       }
