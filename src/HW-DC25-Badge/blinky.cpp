@@ -1,3 +1,5 @@
+#include <EEPROM.h>
+
 #include <Adafruit_NeoPixel.h>
 #include <WS2812FX.h>
 
@@ -8,16 +10,74 @@ extern WS2812FX ws2812fx;
 extern void all_leds_off();
 extern byte btncounter;
 extern volatile byte btnid;
+extern byte appmode;
 
 void LED_Flashlight(){
-  while (btncounter == 0)
+  appmode=1;
+  byte count=3;
+  byte last=0;
+  btnid = 0;
+  while (1)
   {
+    if (btnid == 3){ 
+      if (count == 1) {count = 1; } 
+      else {count--;}
+      btnid = 0;
+    }
+    else if (btnid == 2){ 
+      if (count == 5) {count = 5; } 
+      else {count++;}
+      btnid = 0;
+    }
+    else if (btnid == 4) {break;}
+
+    if (count != last)
+    {
+      switch(count)
+      {
+       case 1:
+          pixels.setBrightness(255);
+          last=1;
+          break;
+       case 2:
+          pixels.setBrightness(184);
+          last=2;
+          break;
+       case 3:
+          pixels.setBrightness(128);
+          last=3;
+          break;
+       case 4:
+          pixels.setBrightness(64);
+          last=4;
+          break;
+       case 5:
+          pixels.setBrightness(10);
+          last=5;
+          break;
+      }
+    }
     for(byte i=0;i<NUMPIXELS;i++){
       //pixels.setPixelColor(i, pixels.Color(255,255,255)); 
       pixels.setPixelColor(i, pixels.Color(63,63,63)); 
       pixels.show(); 
     }
-  } 
+    delay(100);
+  }
+  appmode=0;
+  btncounter++;
+  pixels.setBrightness(EEPROM.read(PIXELBRIGHT_ADDR));
+
+
+  
+//  while (btncounter == 0)
+//  {
+//    for(byte i=0;i<NUMPIXELS;i++){
+//      //pixels.setPixelColor(i, pixels.Color(255,255,255)); 
+//      pixels.setPixelColor(i, pixels.Color(63,63,63)); 
+//      pixels.show(); 
+//    }
+//  } 
 }
 
 #define TIMER_MS 7000
