@@ -113,8 +113,8 @@ unsigned long Shouts6() {
 
 void Shouts() {
   appmode=1;
-  int count=1;
-  int last=0;
+  byte count=1;
+  byte last=0;
   btnid = 0;
   while (1)
   {
