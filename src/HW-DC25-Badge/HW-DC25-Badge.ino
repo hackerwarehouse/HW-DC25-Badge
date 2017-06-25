@@ -43,6 +43,7 @@ volatile byte region_id = 1;
 volatile byte mydispbrightness;
 
 byte appmode = 0;
+byte region_unlocked = 0;
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
@@ -312,21 +313,24 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          //nick or alias setting placeholder
-          appmode=1;
-          //DebugInfo();
-          appmode=0;
+          menu.InitMenu((const char ** )mnuBrightness,cntBrightness,1);
+          mydisp.setBrightness(mydispbrightness);
           break;
         case 2:
           SelectArtwork();
           break;
         case 3:
-          menu.InitMenu((const char ** )mnuBrightness,cntBrightness,1);
-          mydisp.setBrightness(mydispbrightness);
+          if (region_unlocked == 1) {
+            menu.InitMenu((const char ** )mnuRegion,cntRegion,1);
+            mydisp.setBrightness(mydispbrightness);
+          }
+          else { menu.MessageBox("Region is Locked"); }
           break;
         case 4:
-          menu.InitMenu((const char ** )mnuRegion,cntRegion,1);
-          mydisp.setBrightness(mydispbrightness);
+          //nick or alias setting placeholder
+          appmode=1;
+          //DebugInfo();
+          appmode=0;
           break;
       }
 
@@ -436,10 +440,10 @@ void loop()
 
     //3rd level menus
     else if (menu.CurrentMenu==mnuBrightness)
-      { menu.InitMenu((const char ** )mnuSettings,cntSettings,3); 
+      { menu.InitMenu((const char ** )mnuSettings,cntSettings,1); 
         mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuRegion)
-      { menu.InitMenu((const char ** )mnuSettings,cntSettings,4); 
+      { menu.InitMenu((const char ** )mnuSettings,cntSettings,3); 
         mydisp.setBrightness(mydispbrightness);}
 
     // not converted yet

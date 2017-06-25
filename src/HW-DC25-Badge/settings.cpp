@@ -18,6 +18,7 @@ extern byte btncounter;
 extern volatile byte btnid;
 extern byte mydispbrightness;
 extern byte region_id;
+extern byte region_unlocked;
 
 #include "core.h"
 
@@ -27,9 +28,9 @@ void loadSettings(){
 
   region_id = EEPROM.read(REGION_ADDR);
   if (region_id == 255){
-    EEPROM.write(REGION_ADDR,1);  //default 1 -> US
+    region_id = 1;                          //default 1 -> US
+    EEPROM.write(REGION_ADDR,region_id);
     EEPROM.commit();
-    region_id = 1;
   }
 
   value = EEPROM.read(PIXELBRIGHT_ADDR);
@@ -55,6 +56,14 @@ void loadSettings(){
     EEPROM.commit();
   }
   ws2812fx.setBrightness(value);
+
+  region_unlocked = EEPROM.read(REGION_UNLOCK_ADDR);
+  if (region_unlocked == 255){
+    region_unlocked = 0;
+    EEPROM.write(REGION_UNLOCK_ADDR,region_unlocked); 
+    EEPROM.commit();
+  }
+  
 }
 
 void DisplayArtwork(byte img){

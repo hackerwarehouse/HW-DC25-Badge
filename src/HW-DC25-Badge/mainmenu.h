@@ -118,10 +118,10 @@ const char * const mnuExtra[] PROGMEM = {
   };  
 const int cntExtra PROGMEM = 4;
 
-static const char PROGMEM itmSettings1[] = "Nick/Alias";
+static const char PROGMEM itmSettings1[] = "Brightness";
 static const char PROGMEM itmSettings2[] = "Artwork";
-static const char PROGMEM itmSettings3[] = "Brightness";
-static const char PROGMEM itmSettings4[] = "Region";
+static const char PROGMEM itmSettings3[] = "Region";
+static const char PROGMEM itmSettings4[] = "Nick/Alias";
 const char * const mnuSettings[]PROGMEM  = {
   itmRootSettings,
   itmSettings1,itmSettings2,itmSettings3,itmSettings4

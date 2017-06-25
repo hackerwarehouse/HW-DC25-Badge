@@ -14,8 +14,11 @@
 #define MYDISPBRIGHT_ADDR 3     //1 byte
 #define WS2812FXBRIGHT_ADDR 4   //1 byte
 #define ARTWORK_ADDR 5          //1 byte
+#define REGION_UNLOCK_ADDR 6    //1 byte
 
-static const char UNLOCK_REGION[] PROGMEM  = {"UUDDLRLR"};
+static const char UNLOCK_KONAMI[] PROGMEM  = {"UUDDLRLR"};
+static const char UNLOCK_REGION[] PROGMEM  = {"RLRLLRDU"};
+static const char UNLOCK_REGIONPERM[] PROGMEM  = {"UDDDUULR"};
 
 #endif
 
