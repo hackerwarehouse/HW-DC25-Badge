@@ -67,17 +67,6 @@ void LED_Flashlight(){
   appmode=0;
   btncounter++;
   pixels.setBrightness(EEPROM.read(PIXELBRIGHT_ADDR));
-
-
-  
-//  while (btncounter == 0)
-//  {
-//    for(byte i=0;i<NUMPIXELS;i++){
-//      //pixels.setPixelColor(i, pixels.Color(255,255,255)); 
-//      pixels.setPixelColor(i, pixels.Color(63,63,63)); 
-//      pixels.show(); 
-//    }
-//  } 
 }
 
 #define TIMER_MS 7000
