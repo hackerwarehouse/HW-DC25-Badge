@@ -18,6 +18,7 @@
 #include "apscanner.h"
 #include "benchmark.h"
 #include "blinky.h"
+#include "buttonecho.h"
 #include "channelactivity.h"
 #include "connectionmgr.h"
 #include "core.h"
@@ -301,8 +302,7 @@ void loop()
           wifi_off();
           break;
         case 2:
-          menu.MessageBox("WiFi now off");
-          wifi_off();
+          ButtonEcho();
           break;
         case 3:
           break;

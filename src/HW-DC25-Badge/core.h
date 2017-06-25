@@ -1,3 +1,5 @@
+#include <pgmspace.h>
+
 #ifndef HW_CORE_H
 #define HW_CORE_H
 
@@ -12,6 +14,8 @@
 #define MYDISPBRIGHT_ADDR 3     //1 byte
 #define WS2812FXBRIGHT_ADDR 4   //1 byte
 #define ARTWORK_ADDR 5          //1 byte
+
+static const char UNLOCK_REGION[] PROGMEM  = {"UUDDLRLR"};
 
 #endif
 

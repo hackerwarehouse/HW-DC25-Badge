@@ -109,7 +109,7 @@ const char * const mnuClient[] PROGMEM = {
 const int cntClient PROGMEM = 4;
 
 static const char PROGMEM itmExtra1[] = "WiFi off";
-static const char PROGMEM itmExtra2[] = "WiFi off";
+static const char PROGMEM itmExtra2[] = "Button Echo";
 static const char PROGMEM itmExtra3[] = "...";
 static const char PROGMEM itmExtra4[] = "...";
 const char * const mnuExtra[] PROGMEM = {
