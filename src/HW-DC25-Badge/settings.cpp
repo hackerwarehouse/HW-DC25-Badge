@@ -15,7 +15,7 @@ extern WS2812FX ws2812fx;
 extern SSD_13XX mydisp;
 extern byte appmode;
 extern byte btncounter;
-extern volatile byte id;
+extern volatile byte btnid;
 extern byte mydispbrightness;
 extern byte region_id;
 
@@ -117,20 +117,20 @@ void SelectArtwork(){
   appmode=1;
   byte count=1;
   byte last=0;
-  id = 0;
+  btnid = 0;
   while (1)
   {
-    if (id == 3){ 
+    if (btnid == 3){ 
       if (count == 1) {count = 4; } 
       else {count--;}
-      id = 0;
+      btnid = 0;
     }
-    else if (id == 2){ 
+    else if (btnid == 2){ 
       if (count == 4) {count = 1; } 
       else {count++;}
-      id = 0;
+      btnid = 0;
     }
-    else if (id == 1){
+    else if (btnid == 1){
       EEPROM.write(ARTWORK_ADDR,count);
       EEPROM.commit();
       mydisp.clearScreen();
@@ -139,10 +139,10 @@ void SelectArtwork(){
       mydisp.setTextScale(3);
       mydisp.println(F("Saved"));
       delay(1000);
-      id = 4;
+      btnid = 4;
       break;
     }
-    else if (id == 4) {break;}
+    else if (btnid == 4) {break;}
 
     if (count != last)
     {

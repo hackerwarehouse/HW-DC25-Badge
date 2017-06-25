@@ -37,11 +37,11 @@ const byte right = 2;
 const byte up = 0;  
 
 volatile byte btncounter = 0;
-volatile byte id  = 0;
-//byte ledmode = 0;
-byte appmode = 0;
+volatile byte btnid  = 0;
 volatile byte region_id = 1;
 volatile byte mydispbrightness;
+
+byte appmode = 0;
 
 long debouncing_time = 250;
 unsigned long last_micros = 0;
@@ -53,7 +53,7 @@ void UP(){
     else {
       btncounter ++;
     }
-    id = 3;
+    btnid = 3;
     last_micros = micros();
   }
 }
@@ -66,7 +66,7 @@ void DOWN(){
     else {
       btncounter ++;
     }
-    id = 2;
+    btnid = 2;
     last_micros = micros();
   }
 }
@@ -78,7 +78,7 @@ void RIGHT(){
     else {
       btncounter ++;
     }
-    id = 1;
+    btnid = 1;
     last_micros = micros();
   }
 }
@@ -90,7 +90,7 @@ void LEFT(){
     else {
       btncounter ++;
     }
-    id = 4;
+    btnid = 4;
     last_micros = micros();
   }
 }
@@ -139,7 +139,7 @@ void wifi_off(){
 }
 
 void menu_force_escape(){
-  id = 4;
+  btnid = 4;
   btncounter++;
 }
 
@@ -150,7 +150,7 @@ void loop()
   
   if (btncounter > 0)
   { 
-    switch(id)
+    switch(btnid)
     {
       case 1:       
         clickedItem=menu.ProcessMenu(ACTION_SELECT);

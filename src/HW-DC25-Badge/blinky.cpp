@@ -7,6 +7,7 @@ extern Adafruit_NeoPixel pixels;
 extern WS2812FX ws2812fx;
 extern void all_leds_off();
 extern byte btncounter;
+extern volatile byte btnid;
 
 void LED_Flashlight(){
   while (btncounter == 0)
@@ -61,7 +62,6 @@ void LED_WS2812FX_Favorites(){
     }
 }
 
-//extern int ledmode;
 void LED_WS2812FX(byte ledmode){
   ws2812fx.setMode(ledmode);
   ws2812fx.start();

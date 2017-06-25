@@ -4,7 +4,7 @@
 #include "core.h"
 
 extern SSD_13XX mydisp;
-extern volatile byte id;
+extern volatile byte btnid;
 extern byte appmode;
 extern byte btncounter;
 
@@ -115,20 +115,20 @@ void Shouts() {
   appmode=1;
   int count=1;
   int last=0;
-  id = 0;
+  btnid = 0;
   while (1)
   {
-    if (id == 3){ 
+    if (btnid == 3){ 
       if (count == 1) {count = 6; } 
       else {count--;}
-      id = 0;
+      btnid = 0;
     }
-    else if (id == 2){ 
+    else if (btnid == 2){ 
       if (count == 6) {count = 1; } 
       else {count++;}
-      id = 0;
+      btnid = 0;
     }
-    else if (id == 4) {break;}
+    else if (btnid == 4) {break;}
 
     if (count != last)
     {
