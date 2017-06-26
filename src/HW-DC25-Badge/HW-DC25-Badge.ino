@@ -20,6 +20,7 @@
 #include "blinky.h"
 #include "buttonecho.h"
 #include "channelactivity.h"
+#include "channelusage.h"
 #include "connectionmgr.h"
 #include "core.h"
 #include "mainmenu.h"
@@ -136,7 +137,7 @@ void all_leds_off(){
 
 void wifi_off(){
   WiFi.mode(WIFI_OFF);
-  WiFi.forceSleepBegin();
+  //WiFi.forceSleepBegin();
   delay(1);
 }
 
@@ -214,18 +215,27 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          WiFi.forceSleepWake();
+          //WiFi.forceSleepWake();
+          //delay(100);
           WiFi.mode(WIFI_STA);
           menu.MessageBox("Scanning...");
-          Channel_Activity();
+          AP_Channel_Usage();
           menu_reset();
           wifi_off();
           break;
         case 2:
-          WiFi.forceSleepWake();
+          //WiFi.forceSleepWake();
+          //delay(100);
           WiFi.mode(WIFI_STA);
           menu.MessageBox("Scanning...");
           AP_Scanner();
+          menu_reset();
+          wifi_off();
+          break;
+        case 3:
+          //WiFi.forceSleepWake();
+          //delay(100);
+          Channel_Activity();
           menu_reset();
           wifi_off();
           break;
@@ -264,6 +274,7 @@ void loop()
           Benchmark();
           break;
         case 2:
+          menu.MessageBox("Locked");
           break;
         case 3:
           break;
@@ -275,7 +286,7 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          WiFi.forceSleepWake();
+          //WiFi.forceSleepWake();
           WiFi.mode(WIFI_AP_STA);
           ConnectionManager();
           //if ap mode, display msg
@@ -286,6 +297,7 @@ void loop()
         case 2:
           menu.MessageBox("Disconnected");
           WiFi.disconnect(); 
+          wifi_off();
           break;
         case 3:
           break;

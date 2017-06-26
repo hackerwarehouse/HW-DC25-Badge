@@ -20,13 +20,14 @@ const char * const mnuRoot[] PROGMEM = {
   }; 
 const int cntRoot PROGMEM = 7;
 
-static const char PROGMEM itmWiFiTools1[] = "Channel Activity";
+static const char PROGMEM itmWiFiTools1[] = "Channel Usage";
 static const char PROGMEM itmWiFiTools2[] = "AP Scanner";
+static const char PROGMEM itmWiFiTools3[] = "Channel Activity";
 const char * const mnuWiFiTools[] PROGMEM = {
   itmRootWiFi,
-  itmWiFiTools1,itmWiFiTools2
+  itmWiFiTools1,itmWiFiTools2,itmWiFiTools3
   };
-const int cntWiFiTools PROGMEM = 2;
+const int cntWiFiTools PROGMEM = 3;
 
 static const char PROGMEM itmBlinky[] = "Blinky Modes";
 static const char PROGMEM itmBlinky0[] = "Favorites";

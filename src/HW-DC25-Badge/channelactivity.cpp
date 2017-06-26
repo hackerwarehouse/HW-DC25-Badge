@@ -1,279 +1,121 @@
-#include <Adafruit_NeoPixel.h>
+#include <EEPROM.h>
+
 #include <ESP8266WiFi.h>
 #include <SSD_13XX.h>
-#include <WiFiClient.h>
+extern "C" {
+  #include "user_interface.h"
+}
 
-#include "_fonts/channels.c"
 #include "core.h"
 
 extern SSD_13XX mydisp;
-extern Adafruit_NeoPixel pixels;
 extern byte btncounter;
+extern volatile byte btnid;
+extern byte appmode;
 extern byte region_id;
 
-class Flasher
-{
-  // Class Member Variables
-  // These are initialized at startup
-  int ledPin;      // the number of the LED pin
-  long OnTime;     // milliseconds of on-time
-  long OffTime;    // milliseconds of off-time
-  
-  // These maintain the current state
-  bool ledState;                 // ledState used to set the LED
-  unsigned long previousMillis;   // will store last time LED was updated
- 
-  // Constructor - creates a Flasher 
-  // and initializes the member variables and state
-  public:
-  Flasher(int pin, long ON, long OFF)
-  {
-  ledPin = pin;     
-    
-  OnTime = ON;
-  OffTime = OFF;
-  
-  ledState = false; 
-  previousMillis = 0;
+
+//===== Run-Time variables =====//
+unsigned long pkts = 0;
+unsigned long deauths = 0;
+unsigned long maxVal = 0;
+double multiplicator = 0.0;
+
+int val[96];
+
+void sniffer(uint8_t *buf, uint16_t len) {
+  pkts++;
+  if(buf[12] == 0xA0 || buf[12] == 0xC0){
+    deauths++;
   }
- 
-  void Update()
-  {
-    // check to see if it's time to change the state of the LED
-    unsigned long currentMillis = millis();
-     
-    if((ledState == true) && (currentMillis - previousMillis >= OnTime) || OnTime==0)
-    {
-      ledState = false;  // Turn it off
-      previousMillis = currentMillis;  // Remember the time
-      pixels.setPixelColor(ledPin, pixels.Color(0,0,0));
-      pixels.show();
-    }
-    else if ((ledState == false) && (currentMillis - previousMillis >= OffTime) && OffTime!=0)
-    {
-      ledState = true;  // turn it on
-      previousMillis = currentMillis;   // Remember the time
-      if(OnTime==1000){
-        pixels.setPixelColor(ledPin, pixels.Color(0,255,0));
-        pixels.show();
-      }
-      else if(OnTime==500){
-        pixels.setPixelColor(ledPin, pixels.Color(255,255,0));
-        pixels.show();
-      }
-      else if (OnTime == 100){
-        pixels.setPixelColor(ledPin, pixels.Color(255,0,0));
-        pixels.show();
-      }
-    }  
+}
+
+void getMultiplicator(){
+  maxVal = 1;
+  for(int i=1;i<97;i++){
+    if(val[i] > maxVal) maxVal = val[i];
   }
-};
+  if(maxVal > 56) multiplicator = (double)56/(double)maxVal;
+  else multiplicator = 1;
+}
 
-int chn [13];
-long times [13];
-int mult = 5;
-
-//Channel Traffic 
-void Channel_Activity(){
- for (int i=0; i<NUMPIXELS;i++){
-  chn[i] = 0;
-  times[i] = 0;
-  }
-
-  //Count number of networks in each channel
-  int n = WiFi.scanNetworks();
-  for (int i = 0; i < n; i++) {
-    String Name = WiFi.SSID(i);
-    int count = WiFi.channel(i);
-    Serial.println(Name + ": " + count);
-    switch (count){
-    case 1:
-    {
-      chn[0] += 1;
-    }
-    break;
-    case 2:
-    {
-      chn[1] += 1;  
-    }
-    break;
-    case 3:
-    {
-      chn[2] += 1;
-    }
-    break;
-    case 4:
-    {
-      chn[3] += 1;
-    }
-    break;
-    case 5:
-    {
-      chn[4] += 1;
-    }
-    break;
-    case 6:
-    {
-      chn[5] += 1;
-    }
-    break;
-    case 7:
-    {
-      chn[6] += 1;
-    }
-    break;
-    case 8:
-    {
-      chn[7] += 1;
-    }
-    break;
-    case 9:
-    {
-      chn[8] += 1;
-    }
-    break;
-    case 10:
-    {
-      chn[9] += 1;
-    }
-    break;
-    case 11:
-    {
-      chn[10] += 1;     
-    }
-    break;
-    case 12:
-    {
-      chn[11] += 1;
-    }
-    break;
-    case 13:
-    {
-      chn[12] += 1;
-    }
-    break;
-    case 14:
-    {
-      chn[13] += 1;
-    }
-    break;
-    }
-  }
-
-  //Assign delay time for blinking depending on number of networks in each channel
-  for (int i =0; i<NUMPIXELS; i++){
-    if(chn[i]==0){
-      times[i] = 0;
-    }
-    else if(chn[i]==1 || chn[i]==2){
-      times[i] = 1000;
-    }
-    else if(chn[i]==3 || chn[i]==4){
-      times[i] = 500;
-    }
-    else if(chn[i]>=5){
-      times[i] = 100;
-    } 
-  }
-
-  //Create intance of Flasher class for each LED. 
-  Flasher led1(0, times[0], times[0]);
-  Flasher led2(1, times[1], times[1]);
-  Flasher led3(2, times[2], times[2]);
-  Flasher led4(3, times[3], times[3]);
-  Flasher led5(4, times[4], times[4]);
-  Flasher led6(5, times[5], times[5]);
-  Flasher led7(6, times[6], times[6]);
-  Flasher led8(7, times[7], times[7]);
-  Flasher led9(8, times[8], times[8]);
-  Flasher led10(9, times[9], times[9]);
-  Flasher led11(10, times[10], times[10]);
-  Flasher led12(11, times[11], times[11]);
-  Flasher led13(12, times[12], times[12]);
-  Flasher led14(13, times[13], times[13]);
-
-  //Set Title, font and horizontal line 
+void chn_activity_display(byte curchn){
   mydisp.clearScreen();
-  mydisp.setCursor(14, 0);
-  mydisp.setTextColor(CYAN);
-  mydisp.print("Channel Activity");
-  mydisp.setFont(&channels);
   mydisp.setTextColor(WHITE);
-  mydisp.setCursor(0,53);
-  if (region_id == 1){  //US
-    mydisp.print("1 2 3 4 5 6 7 8 9 10 11");
-    mydisp.print(" ");
-    mydisp.setTextColor(RED);
-    mydisp.print("12 13");
-  }
-  else if (region_id == 2)  //EU
-    mydisp.print("1 2 3 4 5 6 7 8 9 10 11 12 13");
-  mydisp.drawLine(0, 53, 95, 53, ORANGE);
-  mydisp.setTextColor(WHITE);
+  mydisp.setCursor(0, 0);
+  mydisp.setTextScale(1);
+  mydisp.println("Ch: " + (String)curchn + "           Pkts: " + (String)pkts);
+  for(int i=1;i<96;i++) mydisp.drawLine(i, 56-val[i]*multiplicator, i, 56, BLUE);
+}
 
-  //Draw Bar Graph
-  byte num_chns;
-  if(region_id == 1) //US
-     num_chns = 11;
-  else if (region_id == 2) // EU
-     num_chns = 13;
-  for(int i=0; i<num_chns; i++){
-    if(i<9){
-      if(times[i]==1000){
-        mydisp.fillRect(i*6,53-chn[i]*mult,3,chn[i]*mult,GREEN);
-        mydisp.setCursor(i*6-1, (53-chn[i]*mult)-10);
-        mydisp.print(chn[i]);
+void chn_activity_reset(byte curchn){
+  wifi_set_channel(curchn);
+  for(int i=1;i<97;i++) val[i] = 0;
+  pkts = 0;
+  multiplicator = 1;
+  chn_activity_display(curchn);
+}
+
+void Channel_Activity(){
+  appmode=1;
+  btnid = 0;
+  
+  byte curchn = 1;
+  byte maxCh;
+  unsigned long prevTime = 0;
+  unsigned long curTime = 0;
+
+  if (region_id == 1) { maxCh = 11; }
+  else if (region_id == 2) { maxCh = 13; }
+
+  wifi_set_opmode(STATION_MODE);
+  wifi_promiscuous_enable(0);
+  WiFi.disconnect();
+  wifi_set_promiscuous_rx_cb(sniffer);
+  wifi_set_channel(1);
+  wifi_promiscuous_enable(1);
+  chn_activity_reset(1);
+  
+  while (1)
+  {
+    if (btnid == 3){ 
+      if (curchn == maxCh) {curchn = 1; } 
+      else {curchn++;}
+      chn_activity_reset(curchn);
+      btnid = 0;
+    }
+    else if (btnid == 2){ 
+      if (curchn == 1) {curchn = maxCh; } 
+      else {curchn--;}
+      chn_activity_reset(curchn);
+      btnid = 0;
+    }
+    else if (btnid == 4) {break;}
+
+    curTime = millis();
+    
+    //every second
+    if(curTime - prevTime >= 1000){
+      prevTime = curTime;
+  
+      //move every packet bar one pixel to the left
+      for(int i=1;i<97;i++){
+        val[i] = val[i+1];
       }
-      else if(times[i]==500){
-        mydisp.fillRect(i*6,53-chn[i]*mult,3,chn[i]*mult,YELLOW);
-        mydisp.setCursor(i*6-1, (53-chn[i]*mult)-10);
-        mydisp.print(chn[i]);
-      }
-      else if(times[i]==100){
-        mydisp.fillRect(i*6,53-chn[i]*mult,3,chn[i]*mult,RED);
-        mydisp.setCursor(i*6-1, (53-chn[i]*mult)-10);
-        mydisp.print(chn[i]);
-      }
+      val[96] = pkts;
+  
+      getMultiplicator();
+      chn_activity_display(curchn);
+
+      //reset counters
+      deauths = 0;
+      pkts = 0;
     }
 
-    //Change spacing between bars after channel 9
-    else if(i>=9){
-      if(times[i]==1000){
-        mydisp.fillRect(10*(i-4)+7,53-chn[i]*mult,3,chn[i]*mult,GREEN);
-        mydisp.setCursor((10*(i-4)+7), (53-chn[i]*mult)-10);
-        mydisp.print(chn[i]);
-      }
-      else if(times[i]==500){
-        mydisp.fillRect(10*(i-4)+7,53-chn[i]*mult,3,chn[i]*mult,YELLOW);
-        mydisp.setCursor((10*(i-4)+7), (53-chn[i]*mult)-10);
-        mydisp.print(chn[i]);
-      }
-      else if(times[i]==100){
-        mydisp.fillRect(10*(i-4)+7,53-chn[i]*mult,3,chn[i]*mult,RED);
-        mydisp.setCursor((10*(i-4)+7), (53-chn[i]*mult)-10);
-        mydisp.print(chn[i]);
-      }
-    }
-  }
 
-  //Blink LEDs 
-  while (btncounter == 0){
-    yield();
-    led1.Update();
-    led2.Update();
-    led3.Update();
-    led4.Update();
-    led5.Update();
-    led6.Update();
-    led7.Update();
-    led8.Update();
-    led9.Update();
-    led10.Update();
-    led11.Update();
-    if (region_id == 2) {
-      led12.Update();
-      led13.Update();
-    }
-    //led14.Update();
+    delay(100);
   }
+  wifi_promiscuous_enable(0);
+  appmode=0;
+  btncounter++;
 }
