@@ -8,9 +8,8 @@ extern volatile byte btnid;
 extern byte appmode;
 extern byte btncounter;
 
-unsigned long Shouts1() {
+void Shouts1() {  
   mydisp.clearScreen();
-  unsigned long start = micros();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(2);
@@ -23,12 +22,10 @@ unsigned long Shouts1() {
   mydisp.println(F("@bitstr3m"));
   mydisp.println(F("@SageFedora"));
   mydisp.println(F("0xEnder"));
-  return micros() - start;
 }
 
-unsigned long Shouts2() {
+void Shouts2() {
   mydisp.clearScreen();
-  unsigned long start = micros();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(1);
@@ -40,12 +37,10 @@ unsigned long Shouts2() {
   mydisp.println(F("BDAWG"));
   mydisp.println(F("cryptoishard"));
   mydisp.println(F("Csp3r"));
-  return micros() - start;
 }
 
-unsigned long Shouts3() {
+void Shouts3() {
   mydisp.clearScreen();
-  unsigned long start = micros();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(1);
@@ -57,12 +52,10 @@ unsigned long Shouts3() {
   mydisp.println(F("Duck Duck -  DC603"));
   mydisp.println(F("fico"));
   mydisp.println(F("HealWHans Hak4Kidz"));
-  return micros() - start;
 }
 
-unsigned long Shouts4() {
+void Shouts4() {
   mydisp.clearScreen();
-  unsigned long start = micros();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(1);
@@ -74,12 +67,10 @@ unsigned long Shouts4() {
   mydisp.println(F("mediumrehr"));
   mydisp.println(F("monolith"));
   mydisp.println(F("Phaded"));
-  return micros() - start;
 }
 
-unsigned long Shouts5() {
+void Shouts5() {
   mydisp.clearScreen();
-  unsigned long start = micros();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(1);
@@ -91,12 +82,10 @@ unsigned long Shouts5() {
   mydisp.println(F("Trippbit"));
   mydisp.println(F("tusuzu"));
   mydisp.println(F("Wasabi"));
-  return micros() - start;
 }
 
-unsigned long Shouts6() {
+void Shouts6() {
   mydisp.clearScreen();
-  unsigned long start = micros();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(1);
@@ -108,7 +97,6 @@ unsigned long Shouts6() {
   mydisp.println(F("Zq"));
   mydisp.println(F("...and many other"));
   mydisp.println(F("unnamed supporters"));
-  return micros() - start;
 }
 
 void Shouts() {
@@ -135,30 +123,31 @@ void Shouts() {
       switch(count)
       {
        case 1:
-          Serial.println(Shouts1());
-          last=1;
+          Shouts1();
+          //last=1;
           break;
        case 2:
-          Serial.println(Shouts2());
-          last=2;
+          Shouts2();
+          //last=2;
           break;
        case 3:
-          Serial.println(Shouts3());
-          last=3;
+          Shouts3();
+          //last=3;
           break;
        case 4:
-          Serial.println(Shouts4());
-          last=4;
+          Shouts4();
+          //last=4;
           break;
        case 5:
-          Serial.println(Shouts5());
-          last=5;
+          Shouts5();
+          //last=5;
           break;
        case 6:
-          Serial.println(Shouts6());
-          last=6;
+          Shouts6();
+          //last=6;
           break;
       }
+      last=count;
     }
     delay(100);
   }

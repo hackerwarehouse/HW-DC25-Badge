@@ -24,7 +24,6 @@ void Credits()
       buffidx++;
     } 
   }
-  //mydisp.drawImage(0, 0, &hacker);
   mydisp.setCursor(17, 4);
   mydisp.print("Hacker Warehouse");
   mydisp.setCursor(1, 20);
@@ -38,7 +37,6 @@ void Credits()
       buffidx++;
     } 
   }
-  //mydisp.drawImage(1, 32, &js);
   mydisp.setCursor(17, 36);
   mydisp.print("Jaycon Systems");
   mydisp.setCursor(1, 52);
@@ -88,9 +86,9 @@ void DebugInfo()
   mydisp.println(value);
   value = EEPROM.read(MYDISPBRIGHT_ADDR);
   mydisp.println(value);
-  value = EEPROM.read(WS2812FXBRIGHT_ADDR);
-  mydisp.println(value);
   value = EEPROM.read(ARTWORK_ADDR);
+  mydisp.println(value);
+  value = EEPROM.read(REGION_UNLOCK_ADDR);
   mydisp.println(value);
 }
 

@@ -21,8 +21,9 @@ const char * const mnuRoot[] PROGMEM = {
 const int cntRoot PROGMEM = 7;
 
 static const char PROGMEM itmWiFiTools1[] = "Channel Usage";
-static const char PROGMEM itmWiFiTools2[] = "AP Scanner";
-static const char PROGMEM itmWiFiTools3[] = "Channel Activity";
+static const char PROGMEM itmWiFiTools2[] = "Packet Monitor";
+static const char PROGMEM itmWiFiTools3[] = "AP Scanner";
+static const char PROGMEM itmWiFiTools4[] = "test";
 const char * const mnuWiFiTools[] PROGMEM = {
   itmRootWiFi,
   itmWiFiTools1,itmWiFiTools2,itmWiFiTools3

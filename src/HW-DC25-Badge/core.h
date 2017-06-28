@@ -3,6 +3,8 @@
 #ifndef HW_CORE_H
 #define HW_CORE_H
 
+#define _FORCE_PROGMEM__ 1
+
 #define ESP8266
 #define _CS  4    //for SSD_13XX.h
 #define _DC  5    //for SSD_13XX.h

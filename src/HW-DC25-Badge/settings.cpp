@@ -130,13 +130,13 @@ void SelectArtwork(){
   while (1)
   {
     if (btnid == 3){ 
-      if (count == 1) {count = 4; } 
-      else {count--;}
+      if (count == 4) {count = 1; } 
+      else {count++;}
       btnid = 0;
     }
     else if (btnid == 2){ 
-      if (count == 4) {count = 1; } 
-      else {count++;}
+      if (count == 1) {count = 4; } 
+      else {count--;}
       btnid = 0;
     }
     else if (btnid == 1){

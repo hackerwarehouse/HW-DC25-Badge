@@ -37,30 +37,26 @@ void LED_Flashlight(){
       {
        case 1:
           pixels.setBrightness(255);
-          last=1;
           break;
        case 2:
           pixels.setBrightness(184);
-          last=2;
           break;
        case 3:
           pixels.setBrightness(128);
-          last=3;
           break;
        case 4:
           pixels.setBrightness(64);
-          last=4;
           break;
        case 5:
           pixels.setBrightness(10);
-          last=5;
           break;
       }
-    }
-    for(byte i=0;i<NUMPIXELS;i++){
-      //pixels.setPixelColor(i, pixels.Color(255,255,255)); 
-      pixels.setPixelColor(i, pixels.Color(63,63,63)); 
-      pixels.show(); 
+      for(byte i=0;i<NUMPIXELS;i++){
+        //pixels.setPixelColor(i, pixels.Color(255,255,255)); 
+        pixels.setPixelColor(i, pixels.Color(63,63,63)); 
+        pixels.show(); 
+      }
+      last=count;
     }
     delay(100);
   }
