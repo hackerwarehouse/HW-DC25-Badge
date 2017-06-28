@@ -19,11 +19,11 @@
 #include "benchmark.h"
 #include "blinky.h"
 #include "buttonecho.h"
-#include "channelactivity.h"
 #include "channelusage.h"
 #include "connectionmgr.h"
 #include "core.h"
 #include "mainmenu.h"
+#include "pktmonitor.h"
 #include "settings.h"
 #include "shouts.h"
 
@@ -226,16 +226,21 @@ void loop()
         case 2:
           //WiFi.forceSleepWake();
           //delay(100);
-          WiFi.mode(WIFI_STA);
-          menu.MessageBox("Scanning...");
-          AP_Scanner();
+          Pkt_Monitor();
           menu_reset();
           wifi_off();
           break;
         case 3:
           //WiFi.forceSleepWake();
           //delay(100);
-          Channel_Activity();
+          menu.MessageBox("Scanning...");
+          AP_Scanner();
+          menu_reset();
+          wifi_off();
+          break;
+        case 4:
+          //WiFi.forceSleepWake();
+          //delay(100);
           menu_reset();
           wifi_off();
           break;
@@ -384,19 +389,22 @@ void loop()
     else if (menu.CurrentMenu==mnuRegion)
       switch (clickedItem)
       {
-        case 1:
-        region_id = 1;  //US
-        EEPROM.write(REGION_ADDR,region_id);  
-        EEPROM.commit();
-        menu.MessageBox("Region Set: US");
-        break;
-        
-        case 2:
-        region_id = 2;  //EU
-        EEPROM.write(REGION_ADDR,region_id);  
-        EEPROM.commit();
-        menu.MessageBox("Region Set: EU");
-        break;      
+       case 1:
+          menu.MessageBox("Region Set: US");
+          region_id = 1;  //US
+          if (EEPROM.read(REGION_UNLOCK_ADDR)){
+            EEPROM.write(REGION_ADDR,region_id);  
+            EEPROM.commit();
+          }
+          break;
+       case 2:
+          menu.MessageBox("Region Set: EU");
+          region_id = 2;
+          if (EEPROM.read(REGION_UNLOCK_ADDR)){
+            EEPROM.write(REGION_ADDR,region_id);  
+            EEPROM.commit();
+          }
+          break;      
       }
 
     else if (menu.CurrentMenu==mnuAbout)

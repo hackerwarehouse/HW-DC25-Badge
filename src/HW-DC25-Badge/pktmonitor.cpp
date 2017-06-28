@@ -15,7 +15,6 @@ extern byte appmode;
 extern byte region_id;
 
 
-//===== Run-Time variables =====//
 unsigned long pkts = 0;
 unsigned long deauths = 0;
 unsigned long maxVal = 0;
@@ -56,7 +55,7 @@ void chn_activity_reset(byte curchn){
   chn_activity_display(curchn);
 }
 
-void Channel_Activity(){
+void Pkt_Monitor(){
   appmode=1;
   btnid = 0;
   
@@ -93,8 +92,6 @@ void Channel_Activity(){
     else if (btnid == 4) {break;}
 
     curTime = millis();
-    
-    //every second
     if(curTime - prevTime >= 1000){
       prevTime = curTime;
   
@@ -111,8 +108,6 @@ void Channel_Activity(){
       deauths = 0;
       pkts = 0;
     }
-
-
     delay(100);
   }
   wifi_promiscuous_enable(0);

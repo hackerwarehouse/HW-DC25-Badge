@@ -1,6 +1,6 @@
 #ifndef HW_CHANNELACTIVITY_H
 #define HW_CHANNELACTIVITY_H
 
-void Channel_Activity();
+void Pkt_Monitor();
 
 #endif
