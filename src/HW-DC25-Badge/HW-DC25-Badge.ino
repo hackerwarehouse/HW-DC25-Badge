@@ -16,16 +16,15 @@
 
 #include "about.h"
 #include "apscanner.h"
-#include "benchmark.h"
 #include "blinky.h"
-#include "buttonecho.h"
 #include "channelusage.h"
 #include "connectionmgr.h"
 #include "core.h"
+#include "extras.h"
+#include "graphics.h"
 #include "mainmenu.h"
 #include "pktmonitor.h"
 #include "settings.h"
-#include "shouts.h"
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 WS2812FX ws2812fx = WS2812FX(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -276,12 +275,13 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          Benchmark();
+          SelectArtwork();
           break;
         case 2:
-          menu.MessageBox("Locked");
+          GfxBenchmark();
           break;
         case 3:
+          menu.MessageBox("Locked");
           break;
         case 4:
           break;
@@ -323,6 +323,7 @@ void loop()
           ButtonEcho();
           break;
         case 3:
+          KeyboardDemo();
           break;
       }
 
@@ -334,7 +335,10 @@ void loop()
           mydisp.setBrightness(mydispbrightness);
           break;
         case 2:
-          SelectArtwork();
+          //nick or alias setting placeholder
+          appmode=1;
+          //DebugInfo();
+          appmode=0;
           break;
         case 3:
           if (region_unlocked == 1) {
@@ -344,10 +348,6 @@ void loop()
           else { menu.MessageBox("Region is Locked"); }
           break;
         case 4:
-          //nick or alias setting placeholder
-          appmode=1;
-          //DebugInfo();
-          appmode=0;
           break;
       }
 

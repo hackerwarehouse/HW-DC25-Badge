@@ -91,9 +91,9 @@ const char * const mnuBlinky[] PROGMEM = {
 const int cntBlinky PROGMEM = 49;
 
 static const char PROGMEM itmGraphics[] = "Graphic Modes";
-static const char PROGMEM itmGraphics1[] = "Benchmark";
-static const char PROGMEM itmGraphics2[] = "Rick Roll";
-static const char PROGMEM itmGraphics3[] = "Badger";
+static const char PROGMEM itmGraphics1[] = "Artwork";
+static const char PROGMEM itmGraphics2[] = "Benchmark";
+static const char PROGMEM itmGraphics3[] = "Rick Roll";
 const char * const mnuGraphics[] PROGMEM = {
   itmGraphics,
   itmGraphics1,itmGraphics2,itmGraphics3
@@ -112,7 +112,7 @@ const int cntClient PROGMEM = 4;
 
 static const char PROGMEM itmExtra1[] = "WiFi off";
 static const char PROGMEM itmExtra2[] = "Button Echo";
-static const char PROGMEM itmExtra3[] = "...";
+static const char PROGMEM itmExtra3[] = "Keyboard Demo";
 static const char PROGMEM itmExtra4[] = "...";
 const char * const mnuExtra[] PROGMEM = {
   itmRootExtras,
@@ -121,14 +121,14 @@ const char * const mnuExtra[] PROGMEM = {
 const int cntExtra PROGMEM = 4;
 
 static const char PROGMEM itmSettings1[] = "Brightness";
-static const char PROGMEM itmSettings2[] = "Artwork";
+static const char PROGMEM itmSettings2[] = "Nick/Alias";
 static const char PROGMEM itmSettings3[] = "Region";
-static const char PROGMEM itmSettings4[] = "Nick/Alias";
+static const char PROGMEM itmSettings4[] = "";
 const char * const mnuSettings[]PROGMEM  = {
   itmRootSettings,
-  itmSettings1,itmSettings2,itmSettings3,itmSettings4
+  itmSettings1,itmSettings2,itmSettings3
   }; 
-const int cntSettings PROGMEM = 4;
+const int cntSettings PROGMEM = 3;
 
 static const char PROGMEM itmBrightness[] = "Brightness Setting";
 static const char PROGMEM itmBrightness1[] = "Uber Low";

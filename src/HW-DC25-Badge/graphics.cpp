@@ -1,9 +1,117 @@
+#include <EEPROM.h>
 #include <SPI.h>
+
 #include <SSD_13XX.h>
 
 #include "core.h"
 
 extern SSD_13XX mydisp;
+extern byte appmode;
+extern byte btncounter;
+extern volatile byte btnid;
+
+#include "_images/badge.c"
+#include "_images/godai_1.c"
+#include "_images/defcon.c"
+#include "_images/hackerwarehouse.c"
+
+void DisplayArtwork(byte img){
+  int h, w, buffidx;
+  int row, col;
+  switch(img)
+  {
+   case 1:
+      h = 31;
+      w = 95;
+      buffidx = 0;
+      mydisp.clearScreen(); 
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col, row+20, pgm_read_word(image_data_hackerwarehouse + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+   case 2:
+      h = 25;
+      w = 96;
+      buffidx = 0;
+      mydisp.clearScreen(); 
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col, row+20, pgm_read_word(image_data_defcon + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+   case 3:
+      h = 63;
+      w = 73;
+      buffidx = 0;
+      mydisp.clearScreen();
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col+11, row, pgm_read_word(image_data_badge + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+   case 4:
+      h = 63;
+      w = 63;
+      buffidx = 0;
+      mydisp.clearScreen();
+      for (row=0; row<h; row++) {
+        for (col=0; col<w; col++) { 
+          mydisp.drawPixel(col+17, row, pgm_read_word(image_data_godai_1 + buffidx));
+          buffidx++;
+        } 
+      }
+      break;
+  }
+}
+
+void SelectArtwork(){
+  appmode=1;
+  byte count=1;
+  byte last=0;
+  btnid = 0;
+  while (1)
+  {
+    if (btnid == 3){ 
+      if (count == 4) {count = 1; } 
+      else {count++;}
+      btnid = 0;
+    }
+    else if (btnid == 2){ 
+      if (count == 1) {count = 4; } 
+      else {count--;}
+      btnid = 0;
+    }
+    else if (btnid == 1){
+      EEPROM.write(ARTWORK_ADDR,count);
+      EEPROM.commit();
+      mydisp.clearScreen();
+      mydisp.setCursor(0, 0);
+      mydisp.setTextColor(GREENYELLOW);
+      mydisp.setTextScale(3);
+      mydisp.println(F("Saved"));
+      delay(1000);
+      btnid = 4;
+      break;
+    }
+    else if (btnid == 4) {break;}
+
+    if (count != last)
+    {
+      last=count;
+      DisplayArtwork(last); 
+    }
+    delay(100);
+  }
+  appmode=0;
+  btncounter++;
+}
 
 unsigned long testFillScreen() {
   unsigned long start = micros();
@@ -259,7 +367,7 @@ unsigned long testFilledRoundRects() {
   return micros() - start;
 }
 
-void Benchmark(){
+void GfxBenchmark(){
   Serial.println("\nBenchmark                Time (microseconds)");
   Serial.print("Screen fill              ");
   Serial.println(testFillScreen());

@@ -10,13 +10,14 @@ extern volatile byte btnid;
 extern byte region_unlocked;
 
 #include "core.h"
+#include "textinput.h"
 
 #define QUEUE_SIZE 8
 
 void ButtonEcho(){
   appmode=1;
-  byte chars=1;
   btnid = 0;
+  byte chars=1;
   String a = "";
 
   mydisp.clearScreen();
@@ -90,6 +91,22 @@ void ButtonEcho(){
     }
     delay(100);
   }
+  appmode=0;
+  btnid = 4;
+  btncounter++;
+}
+
+void KeyboardDemo(){
+  appmode=1;
+  btnid = 0;
+  mydisp.clearScreen();
+  mydisp.setCursor(0, 0);
+  mydisp.setTextColor(GREENYELLOW);
+  mydisp.setTextScale(1);
+  String t = "";
+  TextInput(F("Input text via d-pad: "), t, 8);
+  if (t) { mydisp.print(t); }
+  delay(2000);
   appmode=0;
   btnid = 4;
   btncounter++;
