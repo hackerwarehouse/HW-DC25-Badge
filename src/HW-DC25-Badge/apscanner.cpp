@@ -16,7 +16,7 @@ void AP_Scanner(){
   
   appmode=1;
   byte count=0;
-  byte last=0;
+  byte last=1;
   btnid = 0;
 
   int n = WiFi.scanNetworks();
@@ -31,12 +31,12 @@ void AP_Scanner(){
     btnid=4;
   }
   else {
-    mydisp.clearScreen();
-    for (int i=0; i<n; i++){
-      mydisp.print(WiFi.RSSI(i));
-      mydisp.print(F(" | "));
-      mydisp.println(WiFi.SSID(i));
-    }
+//    mydisp.clearScreen();
+//    for (int i=0; i<n; i++){
+//      mydisp.print(WiFi.RSSI(i));
+//      mydisp.print(F(" | "));
+//      mydisp.println(WiFi.SSID(i));
+//    }
   }
   
   while (1)

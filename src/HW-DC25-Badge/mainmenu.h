@@ -11,24 +11,27 @@ static const char PROGMEM itmRootWiFi[] = "WiFi Tools";
 static const char PROGMEM itmRootBlinky[] = "Blinky";
 static const char PROGMEM itmRootGrafics[] = "Graphics";
 static const char PROGMEM itmRootClient[] = "Client Tools";
+static const char PROGMEM itmRootMischief[] = "Mischief Tools";
 static const char PROGMEM itmRootExtras[] = "Extras";
 static const char PROGMEM itmRootSettings[] = "Settings";
 static const char PROGMEM itmRootAbout[] = "About";
 const char * const mnuRoot[] PROGMEM = {
   itmRoot,
-  itmRootWiFi,itmRootBlinky,itmRootGrafics,itmRootClient,itmRootExtras,itmRootSettings,itmRootAbout
+  itmRootWiFi,itmRootBlinky,itmRootGrafics,itmRootClient,itmRootMischief,itmRootExtras,itmRootSettings,itmRootAbout
   }; 
-const int cntRoot PROGMEM = 7;
+const int cntRoot PROGMEM = 8;
 
 static const char PROGMEM itmWiFiTools1[] = "Channel Usage";
-static const char PROGMEM itmWiFiTools2[] = "Packet Monitor";
-static const char PROGMEM itmWiFiTools3[] = "AP Scanner";
-static const char PROGMEM itmWiFiTools4[] = "test";
+static const char PROGMEM itmWiFiTools2[] = "AP Scanner";
+static const char PROGMEM itmWiFiTools3[] = "Packet Monitor";
+static const char PROGMEM itmWiFiTools4[] = "Fox Hunt";
+static const char PROGMEM itmWiFiTools5[] = "Deauth Detect";
+static const char PROGMEM itmWiFiTools6[] = "Open AP Nearby?";
 const char * const mnuWiFiTools[] PROGMEM = {
   itmRootWiFi,
-  itmWiFiTools1,itmWiFiTools2,itmWiFiTools3
+  itmWiFiTools1,itmWiFiTools2,itmWiFiTools3,itmWiFiTools4,itmWiFiTools5,itmWiFiTools6
   };
-const int cntWiFiTools PROGMEM = 3;
+const int cntWiFiTools PROGMEM = 6;
 
 static const char PROGMEM itmBlinky[] = "Blinky Modes";
 static const char PROGMEM itmBlinky0[] = "Favorites";
@@ -109,6 +112,16 @@ const char * const mnuClient[] PROGMEM = {
   itmClient1,itmClient2,itmClient3,itmClient4
   };  
 const int cntClient PROGMEM = 4;
+
+static const char PROGMEM itmMischief1[] = "Deauther / Jammer";
+static const char PROGMEM itmMischief2[] = "Karma/Pineapple lite";
+static const char PROGMEM itmMischief3[] = "SSID Rickroll";
+static const char PROGMEM itmMischief4[] = "SSID Havoc";
+const char * const mnuMischief[] PROGMEM = {
+  itmRootMischief,
+  itmMischief1,itmMischief2,itmMischief3,itmMischief4
+  };  
+const int cntMischief PROGMEM = 4;
 
 static const char PROGMEM itmExtra1[] = "WiFi off";
 static const char PROGMEM itmExtra2[] = "Button Echo";

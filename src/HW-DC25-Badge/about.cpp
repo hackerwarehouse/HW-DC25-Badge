@@ -20,8 +20,8 @@ void SysInfo()
   mydisp.setTextScale(1);
   
   mydisp.println(F("HW-DC25 Badge"));
-  mydisp.println(F("  ver 1.0"));
-  mydisp.println(F("  rel date 2017-07-01"));
+  mydisp.println(F("  ver 1.3"));
+  mydisp.println(F("  rel date 2017-07-05"));
   mydisp.println(F("  src on github.com"));
 }
 

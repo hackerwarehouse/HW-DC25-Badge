@@ -195,15 +195,19 @@ void loop()
           menu.InitMenu((const char ** )mnuClient,cntClient,1);
           mydisp.setBrightness(mydispbrightness);
           break; 
-         case 5:
+        case 5:
+          menu.InitMenu((const char ** )mnuMischief,cntMischief,1);
+          mydisp.setBrightness(mydispbrightness);
+          break; 
+        case 6:
           menu.InitMenu((const char ** )mnuExtra,cntExtra,1);
           mydisp.setBrightness(mydispbrightness);
           break;
-         case 6:
+        case 7:
           menu.InitMenu((const char ** )mnuSettings,cntSettings,1);
           mydisp.setBrightness(mydispbrightness);
           break;
-         case 7:
+        case 8:
           menu.InitMenu((const char ** )mnuAbout,cntAbout,1);
           mydisp.setBrightness(mydispbrightness);
           break;
@@ -220,28 +224,43 @@ void loop()
           menu.MessageBox("Scanning...");
           AP_Channel_Usage();
           menu_reset();
-          wifi_off();
+          //wifi_off();
           break;
         case 2:
-          //WiFi.forceSleepWake();
-          //delay(100);
-          Pkt_Monitor();
-          menu_reset();
-          wifi_off();
-          break;
-        case 3:
           //WiFi.forceSleepWake();
           //delay(100);
           menu.MessageBox("Scanning...");
           AP_Scanner();
           menu_reset();
-          wifi_off();
+          //wifi_off();
+          break;
+        case 3:
+          //WiFi.forceSleepWake();
+          //delay(100);
+          Pkt_Monitor();
+          menu_reset();
+          //wifi_off();
           break;
         case 4:
           //WiFi.forceSleepWake();
           //delay(100);
+          //font hunt
           menu_reset();
-          wifi_off();
+          //wifi_off();
+          break;
+        case 5:
+          //WiFi.forceSleepWake();
+          //delay(100);
+          //deauth detector
+          menu_reset();
+          //wifi_off();
+          break;
+        case 6:
+          //WiFi.forceSleepWake();
+          //delay(100);
+          //open ap nearby
+          menu_reset();
+          //wifi_off();
           break;
       }
 
@@ -309,6 +328,21 @@ void loop()
         case 4:
           menu.MessageBox("reset settings");
           wifiManager.resetSettings();
+          break;
+      }
+
+    else if (menu.CurrentMenu==mnuMischief)
+      switch (clickedItem)
+      {
+        case 1:
+          //WiFi.forceSleepWake();
+          //WiFi.mode(WIFI_AP_STA);
+          menu.MessageBox("Locked");
+          menu_reset();
+          break;
+        default:
+          menu.MessageBox("Locked");
+          menu_reset();
           break;
       }
 
@@ -448,14 +482,17 @@ void loop()
     else if (menu.CurrentMenu==mnuClient)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); 
         mydisp.setBrightness(mydispbrightness);}
-    else if (menu.CurrentMenu==mnuExtra)
+    else if (menu.CurrentMenu==mnuMischief)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); 
         mydisp.setBrightness(mydispbrightness);}
-    else if (menu.CurrentMenu==mnuSettings)
+    else if (menu.CurrentMenu==mnuExtra)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); 
         mydisp.setBrightness(mydispbrightness);}
-    else if (menu.CurrentMenu==mnuAbout)
+    else if (menu.CurrentMenu==mnuSettings)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); 
+        mydisp.setBrightness(mydispbrightness);}
+    else if (menu.CurrentMenu==mnuAbout)
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,8); 
         mydisp.setBrightness(mydispbrightness);}
 
     //3rd level menus
@@ -465,11 +502,6 @@ void loop()
     else if (menu.CurrentMenu==mnuRegion)
       { menu.InitMenu((const char ** )mnuSettings,cntSettings,3); 
         mydisp.setBrightness(mydispbrightness);}
-
-    // not converted yet
-    else if (menu.CurrentMenu==(const char **)"SSID List")
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,3);
-        mydisp.setBrightness(mydispbrightness); }
    }
  }
 
