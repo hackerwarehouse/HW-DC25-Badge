@@ -28,11 +28,12 @@ static const char PROGMEM itmWiFiTools4[] = "Deauth Detect";
 static const char PROGMEM itmWiFiTools5[] = "Deauth Monitor";
 static const char PROGMEM itmWiFiTools6[] = "Fox Hunt";
 static const char PROGMEM itmWiFiTools7[] = "Open AP Nearby?";
+static const char PROGMEM itmWiFiTools8[] = "Client Beacons";
 const char * const mnuWiFiTools[] PROGMEM = {
   itmRootWiFi,
-  itmWiFiTools1,itmWiFiTools2,itmWiFiTools3,itmWiFiTools4,itmWiFiTools5,itmWiFiTools6,itmWiFiTools7
+  itmWiFiTools1,itmWiFiTools2,itmWiFiTools3,itmWiFiTools4,itmWiFiTools5,itmWiFiTools6,itmWiFiTools7,itmWiFiTools8
   };
-const int cntWiFiTools PROGMEM = 7;
+const int cntWiFiTools PROGMEM = 8;
 
 static const char PROGMEM itmBlinky[] = "Blinky Modes";
 static const char PROGMEM itmBlinky0[] = "Favorites";

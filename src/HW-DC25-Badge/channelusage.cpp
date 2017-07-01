@@ -87,75 +87,47 @@ void AP_Channel_Usage(){
     Serial.println(Name + ": " + count);
     switch (count){
     case 1:
-    {
-      chn[0] += 1;
-    }
-    break;
+      { chn[0] += 1; }
+      break;
     case 2:
-    {
-      chn[1] += 1;  
-    }
-    break;
+      { chn[1] += 1; }
+      break;
     case 3:
-    {
-      chn[2] += 1;
-    }
-    break;
+      { chn[2] += 1; }
+      break;
     case 4:
-    {
-      chn[3] += 1;
-    }
-    break;
+      { chn[3] += 1; }
+      break;
     case 5:
-    {
-      chn[4] += 1;
-    }
-    break;
+      { chn[4] += 1; }
+      break;
     case 6:
-    {
-      chn[5] += 1;
-    }
-    break;
+      { chn[5] += 1; }
+      break;
     case 7:
-    {
-      chn[6] += 1;
-    }
-    break;
+      { chn[6] += 1; }
+      break;
     case 8:
-    {
-      chn[7] += 1;
-    }
-    break;
+      { chn[7] += 1; }
+      break;
     case 9:
-    {
-      chn[8] += 1;
-    }
-    break;
+      { chn[8] += 1; }
+      break;
     case 10:
-    {
-      chn[9] += 1;
-    }
-    break;
+      { chn[9] += 1; }
+      break;
     case 11:
-    {
-      chn[10] += 1;     
-    }
-    break;
+      { chn[10] += 1; }
+      break;
     case 12:
-    {
-      chn[11] += 1;
-    }
-    break;
+      { chn[11] += 1; }
+      break;
     case 13:
-    {
-      chn[12] += 1;
-    }
-    break;
+      { chn[12] += 1; }
+      break;
     case 14:
-    {
-      chn[13] += 1;
-    }
-    break;
+      { chn[13] += 1; }
+      break;
     }
   }
 
