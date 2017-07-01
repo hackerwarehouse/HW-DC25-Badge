@@ -97,14 +97,15 @@ const int cntBlinky PROGMEM = 49;
 
 static const char PROGMEM itmGraphics[] = "Graphic Modes";
 static const char PROGMEM itmGraphics1[] = "Artwork";
-static const char PROGMEM itmGraphics2[] = "3d Cube";
-static const char PROGMEM itmGraphics3[] = "Benchmark";
-static const char PROGMEM itmGraphics4[] = "test";
+static const char PROGMEM itmGraphics2[] = "3d Cube Demo";
+static const char PROGMEM itmGraphics3[] = "Clock Demo";
+static const char PROGMEM itmGraphics4[] = "Gauge Demo";
+static const char PROGMEM itmGraphics5[] = "Benchmark";
 const char * const mnuGraphics[] PROGMEM = {
   itmGraphics,
-  itmGraphics1,itmGraphics2,itmGraphics3,itmGraphics4
+  itmGraphics1,itmGraphics2,itmGraphics3,itmGraphics4,itmGraphics5
   };  
-const int cntGraphics PROGMEM = 4;
+const int cntGraphics PROGMEM = 5;
 
 static const char PROGMEM itmClient1[] = "Connect to an AP";
 static const char PROGMEM itmClient2[] = "Disconnect from AP";

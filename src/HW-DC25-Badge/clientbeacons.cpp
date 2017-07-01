@@ -49,7 +49,7 @@ static void printDataSpan(uint16_t start, uint16_t size, uint8_t* data) {
   }
 }
 
-static void showMetadata(SnifferPacket *snifferPacket) {
+static void showProbedata(SnifferPacket *snifferPacket) {
   unsigned int frameControl = ((unsigned int)snifferPacket->data[1] << 8) + snifferPacket->data[0];
 
   uint8_t version      = (frameControl & 0b0000000000000011) >> 0;
@@ -63,16 +63,12 @@ static void showMetadata(SnifferPacket *snifferPacket) {
   if (frameType != TYPE_MANAGEMENT || frameSubType != SUBTYPE_PROBE_REQUEST) return;
 
   // Filter out broadcast probes
-  if(SSID_length == 0){
-      return;
-  }
+  if(SSID_length == 0){ return; }
 
   mydisp.clearScreen();
   mydisp.setCursor(0, 0);
 
-  //uint8_t SSID_length = snifferPacket->data[25];
   mydisp.print("SSID: ");
-  //printDataSpan(26, SSID_length, snifferPacket->data);
 
   // Save SSID and client MAC address of current probe request
   String SSIDcurrent = getSSID(26, SSID_length, snifferPacket->data);
@@ -92,9 +88,9 @@ static void showMetadata(SnifferPacket *snifferPacket) {
   mydisp.println(addr);
 }
 
-static void ICACHE_FLASH_ATTR sniffer_callback(uint8_t *buffer, uint16_t length) {
+static void ICACHE_FLASH_ATTR sniffer_probe_callback(uint8_t *buffer, uint16_t length) {
   struct SnifferPacket *snifferPacket = (struct SnifferPacket*) buffer;
-  showMetadata(snifferPacket);
+  showProbedata(snifferPacket);
 }
 
 #define CHANNEL_HOP_INTERVAL_MS   2000
@@ -124,7 +120,7 @@ void ClientBeacons() {
   wifi_promiscuous_enable(0);
   delay(10);
   WiFi.disconnect();
-  wifi_set_promiscuous_rx_cb(sniffer_callback);
+  wifi_set_promiscuous_rx_cb(sniffer_probe_callback);
   delay(10);
   wifi_set_channel(1);
   wifi_promiscuous_enable(1);
@@ -156,7 +152,7 @@ void ClientBeacons2() {
   wifi_promiscuous_enable(0);
   delay(10);
   WiFi.disconnect();
-  wifi_set_promiscuous_rx_cb(sniffer_callback);
+  wifi_set_promiscuous_rx_cb(sniffer_probe_callback);
   delay(10);
   wifi_set_channel(1);
   wifi_promiscuous_enable(1);

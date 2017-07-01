@@ -725,5 +725,196 @@ void cubeDemo(void)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+uint16_t ccenterx, ccentery; //center x,y of the clock
+const uint16_t cradius = 32;//radius of the clock
+const float scosConst = 0.0174532925;
+float sx = 0, sy = 1, mx = 1, my = 0, hx = -1, hy = 0;
+float sdeg = 0, mdeg = 0, hdeg = 0;
+uint16_t osx, osy, omx, omy, ohx, ohy;
+uint16_t x0 = 0, x1 = 0, yy0 = 0, yy1 = 0;
+uint32_t targetTime = 0;// for next 1 second timeout
+uint8_t hh, mm, ss; //containers for current time
 
 
+void drawClockFace() {
+  mydisp.fillCircle(ccenterx, ccentery, cradius-1, BLUE);
+  mydisp.fillCircle(ccenterx, ccentery, cradius - 4, BLACK);
+  // Draw 12 lines
+  for (int i = 0; i < 360; i += 30) {
+    sx = cos((i - 90) * scosConst);
+    sy = sin((i - 90) * scosConst);
+    x0 = sx * (cradius - 4) + ccenterx;
+    yy0 = sy * (cradius - 4) + ccentery;
+    x1 = sx * (cradius - 11) + ccenterx;
+    yy1 = sy * (cradius - 11) + ccentery;
+    mydisp.drawLine(x0, yy0, x1, yy1, BLUE);
+  }
+}
+
+static uint8_t conv2d(const char* p) {
+  uint8_t v = 0;
+  if ('0' <= *p && *p <= '9') v = *p - '0';
+  return 10 * v + *++p - '0';
+}
+
+void drawClockHands(uint8_t h, uint8_t m, uint8_t s) {
+  // Pre-compute hand degrees, x & y coords for a fast screen update
+  sdeg = s * 6;                  // 0-59 -> 0-354
+  mdeg = m * 6 + sdeg * 0.01666667;  // 0-59 -> 0-360 - includes seconds
+  hdeg = h * 30 + mdeg * 0.0833333;  // 0-11 -> 0-360 - includes minutes and seconds
+  hx = cos((hdeg - 90) * scosConst);
+  hy = sin((hdeg - 90) * scosConst);
+  mx = cos((mdeg - 90) * scosConst);
+  my = sin((mdeg - 90) * scosConst);
+  sx = cos((sdeg - 90) * scosConst);
+  sy = sin((sdeg - 90) * scosConst);
+
+  // Erase just old hand positions
+  mydisp.drawLine(ohx, ohy, ccenterx + 1, ccentery + 1, BLACK);
+  mydisp.drawLine(omx, omy, ccenterx + 1, ccentery + 1, BLACK);
+  mydisp.drawLine(osx, osy, ccenterx + 1, ccentery + 1, BLACK);
+  // Draw new hand positions
+  mydisp.drawLine(hx * (cradius - 28) + ccenterx + 1, hy * (cradius - 28) + ccentery + 1, ccenterx + 1, ccentery + 1, WHITE);
+  mydisp.drawLine(mx * (cradius - 17) + ccenterx + 1, my * (cradius - 17) + ccentery + 1, ccenterx + 1, ccentery + 1, WHITE);
+  mydisp.drawLine(sx * (cradius - 14) + ccenterx + 1, sy * (cradius - 14) + ccentery + 1, ccenterx + 1, ccentery + 1, RED);
+  mydisp.fillCircle(ccenterx + 1, ccentery + 1, 3, RED);
+
+  // Update old x&y coords
+  osx = sx * (cradius - 14) + ccenterx + 1;
+  osy = sy * (cradius - 14) + ccentery + 1;
+  omx = mx * (cradius - 17) + ccenterx + 1;
+  omy = my * (cradius - 17) + ccentery + 1;
+  ohx = hx * (cradius - 28) + ccenterx + 1;
+  ohy = hy * (cradius - 28) + ccentery + 1;
+}
+
+void clockDemo(void)
+{
+  appmode=1;
+  btnid = 0;
+  mydisp.clearScreen();
+
+  mydisp.setTextColor(WHITE, BLACK);
+  ccenterx = mydisp.width() / 2;
+  ccentery = mydisp.height() / 2;
+  osx = ccenterx;
+  osy = ccentery;
+  omx = ccenterx;
+  omy = ccentery;
+  ohx = ccenterx;
+  ohy = ccentery;
+  drawClockFace();// Draw clock face
+  //get current time from compiler
+  hh = conv2d(__TIME__);
+  mm = conv2d(__TIME__ + 3);
+  ss = conv2d(__TIME__ + 6);
+  targetTime = millis() + 1000;
+  
+  while (1){
+    if (btnid == 4) {break;}
+    
+    if (targetTime < millis()) {
+      targetTime = millis() + 1000;
+      ss++;
+      if (ss == 60) {
+        ss = 0;
+        mm++;
+        if (mm > 59) {
+          mm = 0;
+          hh++;
+          if (hh > 23) hh = 0;
+        }
+      }
+      drawClockHands(hh, mm, ss);
+    }
+  }
+  appmode=0;
+  btncounter++;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+volatile int16_t curVal1 = 0;
+volatile int16_t oldVal1 = 0;
+#define _GAUGEDIM 31
+
+void faceHelper(uint8_t x, uint8_t y, uint8_t r, int from, int to, float dev) {
+  float dsec, fromSecX, fromSecY, toSecX, toSecY;
+  int i;
+  for (i = from; i <= to; i += 30) {
+    dsec = i * (PI / 180);
+    fromSecX = cos(dsec) * (r / dev);
+    fromSecY = sin(dsec) * (r / dev);
+    toSecX = cos(dsec) * r;
+    toSecY = sin(dsec) * r;
+    mydisp.drawLine(1 + x + fromSecX, 1 + y + fromSecY, 1 + x + toSecX, 1 + y + toSecY, WHITE);
+  }
+}
+
+void drawPointerHelper(int16_t val, uint8_t x, uint8_t y, uint8_t r, uint16_t color) {
+  float dsec, toSecX, toSecY;
+  int16_t minValue = 0;
+  int16_t maxValue = 255;
+  int fromDegree = 150;//start
+  int toDegree = 240;//end
+  if (val > maxValue) val = maxValue;
+  if (val < minValue) val = minValue;
+  dsec = (((float)(uint16_t)(val - minValue) / (float)(uint16_t)(maxValue - minValue) * toDegree) + fromDegree) * (PI / 180);
+  toSecX = cos(dsec) * (r / 1.35);
+  toSecY = sin(dsec) * (r / 1.35);
+  mydisp.drawLine(x, y, 1 + x + toSecX, 1 + y + toSecY, color);
+  mydisp.fillCircle(x, y, 2, color);
+}
+
+void drawGauge(uint8_t x, uint8_t y, uint8_t r) {
+  mydisp.drawCircle(x, y, r, WHITE); //draw instrument container
+  faceHelper(x, y, r, 150, 390, 1.3); //draw major ticks
+  if (r > 15) faceHelper(x, y, r, 165, 375, 1.1); //draw minor ticks
+
+}
+
+void drawNeedle(int16_t val, uint8_t x, uint8_t y, uint8_t r, uint16_t color, uint16_t bcolor) {
+  uint8_t i;
+  if (curVal1 > oldVal1) {
+    for (i = oldVal1; i <= curVal1; i++) {
+      drawPointerHelper(i - 1, _GAUGEDIM, _GAUGEDIM, _GAUGEDIM, bcolor);
+      drawPointerHelper(i, _GAUGEDIM, _GAUGEDIM, _GAUGEDIM, color);
+      if ((curVal1 - oldVal1) < (128)) delay(1);//ballistic
+    }
+  }
+  else {
+    for (i = oldVal1; i >= curVal1; i--) {
+      drawPointerHelper(i + 1, _GAUGEDIM, _GAUGEDIM, _GAUGEDIM, bcolor);
+      drawPointerHelper(i, _GAUGEDIM, _GAUGEDIM, _GAUGEDIM, color);
+      //ballistic
+      if ((oldVal1 - curVal1) >= 128) {
+        delay(1);
+      } else {
+        delay(3);
+      }
+    }
+  }
+}
+
+void gaugeDemo(void)
+{
+  appmode=1;
+  btnid = 0;
+  mydisp.clearScreen();
+
+  drawGauge(_GAUGEDIM, _GAUGEDIM, _GAUGEDIM);
+  
+  while (1){
+    if (btnid == 4) {break;}
+    
+    curVal1 = random(1, 254);
+    if (oldVal1 != curVal1) {
+      drawNeedle(curVal1, _GAUGEDIM, _GAUGEDIM, _GAUGEDIM, GREEN, BLACK);
+      oldVal1 = curVal1;
+    }
+   
+    delay(10);
+  }
+  appmode=0;
+  btncounter++;
+}
