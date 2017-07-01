@@ -11,6 +11,9 @@
 #define PIN            9
 #define NUMPIXELS      14
 
+#define MAXX 96
+#define MAXY 64
+
 #define REGION_ADDR 1           //1 byte - 1->US, 2->EU, 3->JP
 #define PIXELBRIGHT_ADDR 2      //1 byte
 #define MYDISPBRIGHT_ADDR 3     //1 byte

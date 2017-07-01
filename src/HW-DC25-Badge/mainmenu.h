@@ -129,9 +129,9 @@ const char * const mnuMischief[] PROGMEM = {
 const int cntMischief PROGMEM = 5;
 
 static const char PROGMEM itmExtra1[] = "WiFi off";
-static const char PROGMEM itmExtra2[] = "Button Echo";
-static const char PROGMEM itmExtra3[] = "Keyboard Demo";
-static const char PROGMEM itmExtra4[] = "...";
+static const char PROGMEM itmExtra2[] = "Snake Game";
+static const char PROGMEM itmExtra3[] = "Button Echo";
+static const char PROGMEM itmExtra4[] = "Keyboard Demo";
 const char * const mnuExtra[] PROGMEM = {
   itmRootExtras,
   itmExtra1,itmExtra2,itmExtra3,itmExtra4

@@ -373,9 +373,12 @@ void loop()
           wifi_off();
           break;
         case 2:
-          ButtonEcho();
+          snakeGame();
           break;
         case 3:
+          ButtonEcho();
+          break;
+        case 4:
           KeyboardDemo();
           break;
       }
