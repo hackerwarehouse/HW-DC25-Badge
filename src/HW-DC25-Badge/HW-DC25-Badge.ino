@@ -18,6 +18,7 @@
 #include "apscanner.h"
 #include "blinky.h"
 #include "channelusage.h"
+#include "clientbeacons.h"
 #include "connectionmgr.h"
 #include "core.h"
 #include "extras.h"
@@ -259,13 +260,20 @@ void loop()
           //WiFi.forceSleepWake();
           //delay(100);
           //font hunt
-          menu_reset();
+          //menu_reset();
           //wifi_off();
           break;
         case 7:
           //WiFi.forceSleepWake();
           //delay(100);
           //open ap nearby
+          menu_reset();
+          //wifi_off();
+          break;
+        case 8:
+          //WiFi.forceSleepWake();
+          //delay(100);
+          ClientBeacons();
           menu_reset();
           //wifi_off();
           break;

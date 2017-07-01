@@ -115,15 +115,16 @@ const char * const mnuClient[] PROGMEM = {
   };  
 const int cntClient PROGMEM = 4;
 
-static const char PROGMEM itmMischief1[] = "Deauther / Jammer";
+static const char PROGMEM itmMischief1[] = "Deauther";
 static const char PROGMEM itmMischief2[] = "Karma/Pineapple lite";
-static const char PROGMEM itmMischief3[] = "SSID Rickroll";
-static const char PROGMEM itmMischief4[] = "SSID Havoc";
+static const char PROGMEM itmMischief3[] = "Broadcast Packets";
+static const char PROGMEM itmMischief4[] = "SSID Rickroll";
+static const char PROGMEM itmMischief5[] = "SSID Havoc";
 const char * const mnuMischief[] PROGMEM = {
   itmRootMischief,
-  itmMischief1,itmMischief2,itmMischief3,itmMischief4
+  itmMischief1,itmMischief2,itmMischief3,itmMischief4,itmMischief5
   };  
-const int cntMischief PROGMEM = 4;
+const int cntMischief PROGMEM = 5;
 
 static const char PROGMEM itmExtra1[] = "WiFi off";
 static const char PROGMEM itmExtra2[] = "Button Echo";
