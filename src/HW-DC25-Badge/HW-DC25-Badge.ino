@@ -315,10 +315,13 @@ void loop()
           cubeDemo();
           break;
         case 3:
-          GfxBenchmark();
+          clockDemo();
           break;
         case 4:
-          
+          gaugeDemo();
+          break;
+        case 5:
+          GfxBenchmark();
           break;
       }
 
