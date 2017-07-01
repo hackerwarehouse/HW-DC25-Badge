@@ -24,14 +24,15 @@ const int cntRoot PROGMEM = 8;
 static const char PROGMEM itmWiFiTools1[] = "Channel Usage";
 static const char PROGMEM itmWiFiTools2[] = "AP Scanner";
 static const char PROGMEM itmWiFiTools3[] = "Packet Monitor";
-static const char PROGMEM itmWiFiTools4[] = "Fox Hunt";
-static const char PROGMEM itmWiFiTools5[] = "Deauth Detect";
-static const char PROGMEM itmWiFiTools6[] = "Open AP Nearby?";
+static const char PROGMEM itmWiFiTools4[] = "Deauth Detect";
+static const char PROGMEM itmWiFiTools5[] = "Deauth Monitor";
+static const char PROGMEM itmWiFiTools6[] = "Fox Hunt";
+static const char PROGMEM itmWiFiTools7[] = "Open AP Nearby?";
 const char * const mnuWiFiTools[] PROGMEM = {
   itmRootWiFi,
-  itmWiFiTools1,itmWiFiTools2,itmWiFiTools3,itmWiFiTools4,itmWiFiTools5,itmWiFiTools6
+  itmWiFiTools1,itmWiFiTools2,itmWiFiTools3,itmWiFiTools4,itmWiFiTools5,itmWiFiTools6,itmWiFiTools7
   };
-const int cntWiFiTools PROGMEM = 6;
+const int cntWiFiTools PROGMEM = 7;
 
 static const char PROGMEM itmBlinky[] = "Blinky Modes";
 static const char PROGMEM itmBlinky0[] = "Favorites";

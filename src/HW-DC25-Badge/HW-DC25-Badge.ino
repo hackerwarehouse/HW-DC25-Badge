@@ -23,7 +23,7 @@
 #include "extras.h"
 #include "graphics.h"
 #include "mainmenu.h"
-#include "pktmonitor.h"
+#include "packetpower.h"
 #include "settings.h"
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -244,18 +244,25 @@ void loop()
         case 4:
           //WiFi.forceSleepWake();
           //delay(100);
-          //font hunt
+          DeauthDetect();
           menu_reset();
           //wifi_off();
           break;
         case 5:
           //WiFi.forceSleepWake();
           //delay(100);
-          //deauth detector
+          DeauthMonitor();
           menu_reset();
           //wifi_off();
           break;
         case 6:
+          //WiFi.forceSleepWake();
+          //delay(100);
+          //font hunt
+          menu_reset();
+          //wifi_off();
+          break;
+        case 7:
           //WiFi.forceSleepWake();
           //delay(100);
           //open ap nearby
