@@ -4,5 +4,6 @@
 void DisplayArtwork(byte img);
 void SelectArtwork();
 void GfxBenchmark();
+void cubeDemo();
 
 #endif

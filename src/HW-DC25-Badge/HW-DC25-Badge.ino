@@ -312,12 +312,13 @@ void loop()
           SelectArtwork();
           break;
         case 2:
-          GfxBenchmark();
+          cubeDemo();
           break;
         case 3:
-          menu.MessageBox("Locked");
+          GfxBenchmark();
           break;
         case 4:
+          
           break;
       }
 
