@@ -139,36 +139,5 @@ void ClientBeacons() {
   btncounter++;
 }
 
-int probeCount = 0;
-void ClientBeacons2() {
-  appmode=1;
-  byte count=1;
-  byte last=0;
-  btnid = 0;
-  mydisp.setTextColor(ORANGE);
-  mydisp.setTextScale(1);
-
-  wifi_set_opmode(STATION_MODE);
-  wifi_promiscuous_enable(0);
-  delay(10);
-  WiFi.disconnect();
-  wifi_set_promiscuous_rx_cb(sniffer_probe_callback);
-  delay(10);
-  wifi_set_channel(1);
-  wifi_promiscuous_enable(1);
-
-  os_timer_disarm(&channelHop_timer);
-  os_timer_setfn(&channelHop_timer, (os_timer_func_t *) channelHop, NULL);
-  os_timer_arm(&channelHop_timer, CHANNEL_HOP_INTERVAL_MS, 1);
-  
-  while (1)
-  {
-    if (btnid == 4) {break;}
-    delay(100);
-  }
-  wifi_promiscuous_enable(0);
-  appmode=0;
-  btncounter++;
-}
 
 
