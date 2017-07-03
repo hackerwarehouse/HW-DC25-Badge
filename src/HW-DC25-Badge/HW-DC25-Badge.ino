@@ -19,7 +19,6 @@
 #include "blinky.h"
 #include "channelusage.h"
 #include "clientbeacons.h"
-#include "connectionmgr.h"
 #include "core.h"
 #include "extras.h"
 #include "graphics.h"
@@ -329,24 +328,17 @@ void loop()
       switch (clickedItem)
       {
         case 1:
-          //WiFi.forceSleepWake();
-          WiFi.mode(WIFI_AP_STA);
-          ConnectionManager();
-          //if ap mode, display msg
-          //if client mode, display msg
-          menu.MessageBox("Connected");
+          //connect
           menu_reset();
           break;
         case 2:
-          menu.MessageBox("Disconnected");
-          WiFi.disconnect(); 
-          wifi_off();
           break;
         case 3:
           break;
         case 4:
-          menu.MessageBox("reset settings");
-          wifiManager.resetSettings();
+          menu.MessageBox("Disconnected");
+          WiFi.disconnect(); 
+          wifi_off();
           break;
       }
 
@@ -399,6 +391,7 @@ void loop()
           break;
         case 3:
           //configuration via webserver
+          SettingsViaWiFi();
           break;
         case 4:
           break;

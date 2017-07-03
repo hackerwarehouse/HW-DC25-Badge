@@ -108,9 +108,9 @@ const char * const mnuGraphics[] PROGMEM = {
 const int cntGraphics PROGMEM = 5;
 
 static const char PROGMEM itmClient1[] = "Connect to an AP";
-static const char PROGMEM itmClient2[] = "Disconnect from AP";
-static const char PROGMEM itmClient3[] = "...";
-static const char PROGMEM itmClient4[] = "Reset conn settings";
+static const char PROGMEM itmClient2[] = "";
+static const char PROGMEM itmClient3[] = "";
+static const char PROGMEM itmClient4[] = "Disconnect from AP";
 const char * const mnuClient[] PROGMEM = {
   itmRootClient,
   itmClient1,itmClient2,itmClient3,itmClient4

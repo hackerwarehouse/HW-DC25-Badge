@@ -3,5 +3,6 @@
 
 void loadSettings();
 void SaveBrightness(byte a, byte b);
+void SettingsViaWiFi();
 
 #endif

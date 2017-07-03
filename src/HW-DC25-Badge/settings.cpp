@@ -72,26 +72,49 @@ void SaveBrightness(byte a, byte b){
   mydispbrightness = b;
 }
 
+///////////////////////////////////////////////////////////
+
+#include <ESP8266WiFi.h>
+#include <ESP8266mDNS.h>
+
 void SettingsViaWiFi() {
   appmode=1;
   byte count=1;
   byte last=0;
   btnid = 0;
-  
+ 
+  String ssid = "HW-";
+  ssid += random(0,255);
+  ssid += random(0,99);
+  String password = "badge";
+  password += random(0,255);
+  password += random(0,99);
+  password += random(0,255);
+
   mydisp.clearScreen();
   mydisp.setCursor(0, 0);
   mydisp.setTextColor(WHITE);
   mydisp.setTextScale(1);
+  mydisp.println(F("Connect to..."));
+  mydisp.print(F("ssid: "));
+  mydisp.println(ssid);
+  mydisp.print(F("password: "));
+  mydisp.println(password);
+  mydisp.println();
+  mydisp.println(F("then browse to"));
+  mydisp.println(F("  10.0.5.1"));
 
-  // random ssid and password
-  // prompt for connection settings
-  // prompt for ip on webserver
+  WiFi.mode(WIFI_AP);
+  WiFi.softAPConfig(IPAddress(10,0,5,1), IPAddress(10,0,5,1), IPAddress(255,255,255,0));
+  WiFi.softAP(ssid.c_str(), password.c_str(), 9, 0);
   
   while (1)
   {
     if (btnid == 4) {break;}
     delay(100);
   }
+
+  WiFi.softAPdisconnect(1);
   appmode=0;
   btncounter++;
 }
