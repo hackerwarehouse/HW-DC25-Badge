@@ -391,17 +391,14 @@ void loop()
           mydisp.setBrightness(mydispbrightness);
           break;
         case 2:
-          //nick or alias setting placeholder
-          appmode=1;
-          //DebugInfo();
-          appmode=0;
-          break;
-        case 3:
           if (region_unlocked == 1) {
             menu.InitMenu((const char ** )mnuRegion,cntRegion,1);
             mydisp.setBrightness(mydispbrightness);
           }
           else { menu.MessageBox("Region is Locked"); }
+          break;
+        case 3:
+          //configuration via webserver
           break;
         case 4:
           break;

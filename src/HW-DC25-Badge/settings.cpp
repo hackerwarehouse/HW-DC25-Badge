@@ -8,6 +8,9 @@ extern void all_leds_off();
 extern Adafruit_NeoPixel pixels;
 extern WS2812FX ws2812fx;
 extern SSD_13XX mydisp;
+extern volatile byte btnid;
+extern byte appmode;
+extern byte btncounter;
 extern byte mydispbrightness;
 extern byte region_id;
 extern byte region_unlocked;
@@ -68,4 +71,29 @@ void SaveBrightness(byte a, byte b){
   all_leds_off();
   mydispbrightness = b;
 }
+
+void SettingsViaWiFi() {
+  appmode=1;
+  byte count=1;
+  byte last=0;
+  btnid = 0;
+  
+  mydisp.clearScreen();
+  mydisp.setCursor(0, 0);
+  mydisp.setTextColor(WHITE);
+  mydisp.setTextScale(1);
+
+  // random ssid and password
+  // prompt for connection settings
+  // prompt for ip on webserver
+  
+  while (1)
+  {
+    if (btnid == 4) {break;}
+    delay(100);
+  }
+  appmode=0;
+  btncounter++;
+}
+
 
