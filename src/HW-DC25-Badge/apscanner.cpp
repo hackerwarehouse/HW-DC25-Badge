@@ -25,18 +25,11 @@ void AP_Scanner(){
   mydisp.setTextScale(1);
   
   if (n == 0){
-    mydisp.clearScreen();
     mydisp.println(F("No SSIDs detected :("));
     delay(1000);
     btnid=4;
   }
   else {
-//    mydisp.clearScreen();
-//    for (int i=0; i<n; i++){
-//      mydisp.print(WiFi.RSSI(i));
-//      mydisp.print(F(" | "));
-//      mydisp.println(WiFi.SSID(i));
-//    }
   }
   
   while (1)
@@ -81,5 +74,48 @@ void AP_Scanner(){
   }
   appmode=0;
   btncounter++;
+}
+
+void Open_AP_Scanner(){
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+  delay(1000);
+  
+  byte openaps = 0;
+
+  int n = WiFi.scanNetworks();
+  mydisp.clearScreen();
+  mydisp.setTextColor(WHITE);
+  mydisp.setTextScale(1);
+  
+
+  if (n == 0){
+    mydisp.println(F("No SSIDs detected :("));
+  }
+  else {
+    for (int i=0; i<n; i++){
+      if (WiFi.encryptionType(i) == ENC_TYPE_NONE)
+      {
+        openaps = 1;
+        break;
+      }
+    }
+  }
+
+  if (openaps)
+  {
+    for (int i=0; i<n; i++){
+      if (WiFi.encryptionType(i) == ENC_TYPE_NONE)
+      {
+        mydisp.print(WiFi.RSSI(i));
+        mydisp.print(F(" | "));
+        mydisp.println(WiFi.SSID(i));
+      }
+    }
+  }
+  else {
+    mydisp.println(F("No Open APs detected :("));
+  }
+  
 }
 

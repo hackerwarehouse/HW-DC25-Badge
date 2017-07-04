@@ -117,7 +117,7 @@ void setup()
 
   loadSettings();
   all_leds_off();
-  wifi_off();           // not sure if I should keep this here
+  //wifi_off();
   
   Serial.begin(115200);
 }
@@ -265,7 +265,7 @@ void loop()
         case 7:
           //WiFi.forceSleepWake();
           //delay(100);
-          //open ap nearby
+          Open_AP_Scanner();
           menu_reset();
           //wifi_off();
           break;
@@ -338,7 +338,6 @@ void loop()
         case 4:
           menu.MessageBox("Disconnected");
           WiFi.disconnect(); 
-          wifi_off();
           break;
       }
 
