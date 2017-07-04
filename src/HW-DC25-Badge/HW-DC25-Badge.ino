@@ -191,23 +191,23 @@ void loop()
           menu.InitMenu((const char ** )mnuGraphics,cntGraphics,1);
           mydisp.setBrightness(mydispbrightness);
           break;
+//        case 4:
+//          menu.InitMenu((const char ** )mnuClient,cntClient,1);
+//          mydisp.setBrightness(mydispbrightness);
+//          break; 
         case 4:
-          menu.InitMenu((const char ** )mnuClient,cntClient,1);
-          mydisp.setBrightness(mydispbrightness);
-          break; 
-        case 5:
           menu.InitMenu((const char ** )mnuMischief,cntMischief,1);
           mydisp.setBrightness(mydispbrightness);
           break; 
-        case 6:
+        case 5:
           menu.InitMenu((const char ** )mnuExtra,cntExtra,1);
           mydisp.setBrightness(mydispbrightness);
           break;
-        case 7:
+        case 6:
           menu.InitMenu((const char ** )mnuSettings,cntSettings,1);
           mydisp.setBrightness(mydispbrightness);
           break;
-        case 8:
+        case 7:
           menu.InitMenu((const char ** )mnuAbout,cntAbout,1);
           mydisp.setBrightness(mydispbrightness);
           break;
@@ -324,22 +324,22 @@ void loop()
           break;
       }
 
-    else if (menu.CurrentMenu==mnuClient)
-      switch (clickedItem)
-      {
-        case 1:
-          //connect
-          menu_reset();
-          break;
-        case 2:
-          break;
-        case 3:
-          break;
-        case 4:
-          menu.MessageBox("Disconnected");
-          WiFi.disconnect(); 
-          break;
-      }
+//    else if (menu.CurrentMenu==mnuClient)
+//      switch (clickedItem)
+//      {
+//        case 1:
+//          //connect
+//          menu_reset();
+//          break;
+//        case 2:
+//          break;
+//        case 3:
+//          break;
+//        case 4:
+//          menu.MessageBox("Disconnected");
+//          WiFi.disconnect(); 
+//          break;
+//      }
 
     else if (menu.CurrentMenu==mnuMischief)
       switch (clickedItem)
@@ -490,20 +490,20 @@ void loop()
     else if (menu.CurrentMenu==mnuGraphics)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,3); 
         mydisp.setBrightness(mydispbrightness);}
-    else if (menu.CurrentMenu==mnuClient)
+//    else if (menu.CurrentMenu==mnuClient)
+//      { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); 
+//        mydisp.setBrightness(mydispbrightness);}
+    else if (menu.CurrentMenu==mnuMischief)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,4); 
         mydisp.setBrightness(mydispbrightness);}
-    else if (menu.CurrentMenu==mnuMischief)
+    else if (menu.CurrentMenu==mnuExtra)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,5); 
         mydisp.setBrightness(mydispbrightness);}
-    else if (menu.CurrentMenu==mnuExtra)
+    else if (menu.CurrentMenu==mnuSettings)
       { menu.InitMenu((const char ** )mnuRoot,cntRoot,6); 
         mydisp.setBrightness(mydispbrightness);}
-    else if (menu.CurrentMenu==mnuSettings)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); 
-        mydisp.setBrightness(mydispbrightness);}
     else if (menu.CurrentMenu==mnuAbout)
-      { menu.InitMenu((const char ** )mnuRoot,cntRoot,8); 
+      { menu.InitMenu((const char ** )mnuRoot,cntRoot,7); 
         mydisp.setBrightness(mydispbrightness);}
 
     //3rd level menus

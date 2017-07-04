@@ -17,9 +17,9 @@ static const char PROGMEM itmRootSettings[] = "Settings";
 static const char PROGMEM itmRootAbout[] = "About";
 const char * const mnuRoot[] PROGMEM = {
   itmRoot,
-  itmRootWiFi,itmRootBlinky,itmRootGrafics,itmRootClient,itmRootMischief,itmRootExtras,itmRootSettings,itmRootAbout
+  itmRootWiFi,itmRootBlinky,itmRootGrafics,itmRootMischief,itmRootExtras,itmRootSettings,itmRootAbout
   }; 
-const int cntRoot PROGMEM = 8;
+const int cntRoot PROGMEM = 7;
 
 static const char PROGMEM itmWiFiTools1[] = "Channel Usage";
 static const char PROGMEM itmWiFiTools2[] = "AP Scanner";
