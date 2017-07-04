@@ -46,7 +46,7 @@ void AP_Channel_Usage(){
     mydisp.print(F("12 13"));
   }
   else if (region_id == 2)  //EU
-    mydisp.print(F("1 2 3 4 5 6 7 8 9 ABCD"));
+    mydisp.print(F("1 2 3 4 5 6 7 8 9 AB CD"));
   mydisp.drawLine(0, 53, 95, 53, ORANGE);
   mydisp.setTextColor(WHITE);
 

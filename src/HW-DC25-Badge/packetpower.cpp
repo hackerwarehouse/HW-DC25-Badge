@@ -23,7 +23,7 @@ double multiplicator = 0.0;
 int val[96];
 int highval[14];
 
-void sniffer(uint8_t *buf, uint16_t len) {
+void pkt_sniffer_callback(uint8_t *buf, uint16_t len) {
   pkts++;
   if(buf[12] == 0xA0 || buf[12] == 0xC0){
     deauths++;
@@ -72,7 +72,7 @@ void Pkt_Monitor(){
   wifi_set_opmode(STATION_MODE);
   wifi_promiscuous_enable(0);
   WiFi.disconnect();
-  wifi_set_promiscuous_rx_cb(sniffer);
+  wifi_set_promiscuous_rx_cb(pkt_sniffer_callback);
   wifi_set_channel(curchn);
   wifi_promiscuous_enable(1);
   chn_activity_reset(1);
@@ -151,7 +151,7 @@ void DeauthMonitor(){
   wifi_set_opmode(STATION_MODE);
   wifi_promiscuous_enable(0);
   WiFi.disconnect();
-  wifi_set_promiscuous_rx_cb(sniffer);
+  wifi_set_promiscuous_rx_cb(pkt_sniffer_callback);
   wifi_set_channel(curchn);
   wifi_promiscuous_enable(1);
   chn_deauth_monitor_reset(1);
@@ -234,7 +234,7 @@ void DeauthDetect(){
   wifi_set_opmode(STATION_MODE);
   wifi_promiscuous_enable(0);
   WiFi.disconnect();
-  wifi_set_promiscuous_rx_cb(sniffer);
+  wifi_set_promiscuous_rx_cb(pkt_sniffer_callback);
   wifi_set_channel(curchn);
   wifi_promiscuous_enable(1);
   chn_activity_reset(1);
