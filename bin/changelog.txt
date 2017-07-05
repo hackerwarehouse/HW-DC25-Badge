@@ -1,0 +1,41 @@
+HW-DC25-Badge-20170705.bin
+ New
+  - Snake game
+  - Open AP finder
+ Updates
+ Tweaks
+  - Client tools menu - saved for future additions
+  
+
+HW-DC25-Badge-20170701.bin
+ Compile Info
+  406306 bytes (38%) of program storage space
+  Global variables use 48236 bytes (58%) of dynamic memory
+ New
+  - Text input via buttons
+  - deauth monitor (single channel + nav)
+  - deauth detector (all channel rotate)
+  - client beacon sniffer
+  - 3d cube demo
+  - clock demo
+ Updates
+ Tweaks
+  - Region settings
+  - Menu organization
+
+HW-DC25-Badge-20170629.bin
+ New
+  - Packet Monitor (single channel + nav)
+  - Artwork Display
+  - EEPROM settings
+  - Button demo / unlocks
+ Updates
+  - AP Scanner
+ Tweaks
+  - Menus
+  - Fixed logic in some routines
+
+
+HW-DC25-Badge-20170624.bin
+ New
+  - Blinky modes
