@@ -18,12 +18,12 @@
 #include "apscanner.h"
 #include "blinky.h"
 #include "channelusage.h"
-#include "clientbeacons.h"
 #include "core.h"
 #include "extras.h"
 #include "graphics.h"
 #include "mainmenu.h"
-#include "packetpower.h"
+#include "pkt1.h"
+#include "pkt2.h"
 #include "settings.h"
 
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
@@ -258,8 +258,9 @@ void loop()
         case 6:
           //WiFi.forceSleepWake();
           //delay(100);
-          //font hunt
-          //menu_reset();
+          menu.MessageBox("Locked");
+          //FoxHunt();
+          menu_reset();
           //wifi_off();
           break;
         case 7:
