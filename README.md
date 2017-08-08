@@ -49,15 +49,16 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
+'''
 1. Arduino / compiler
 2. Libraries via package manager
-  1. https://github.com/esp8266/Arduino -> http://arduino.esp8266.com/versions/2.3.0/package_esp8266com_index.json
-  2. https://github.com/adafruit/Adafruit_NeoPixel
-  3. https://github.com/kitesurfer1404/WS2812FX
-
+  https://github.com/esp8266/Arduino -> http://arduino.esp8266.com/versions/2.3.0/package_esp8266com_index.json
+  https://github.com/adafruit/Adafruit_NeoPixel
+  https://github.com/kitesurfer1404/WS2812FX
 3. Manually copy the two other library packages to Arduino libraries folder
 4. 3.3v serial cable
 5. and of course a Hacker Warehouse DC25 Badge
+'''
 
 ### Uploading firmware to badge
 
