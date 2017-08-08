@@ -65,7 +65,7 @@ What things you need to install the software and how to install them
 1. Press / hold the up button on badge
 2. Connect 3.3v serial cable
 3. Use arduino compile to upload or use other methods such as esptool or esp8266_flasher (with binary file)
-..* 115200
+  * 115200
 
 
 ## Authors / Contributors
