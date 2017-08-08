@@ -49,7 +49,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 What things you need to install the software and how to install them
 
-'''
+```
 1. Arduino / compiler
 2. Libraries via package manager
   https://github.com/esp8266/Arduino -> http://arduino.esp8266.com/versions/2.3.0/package_esp8266com_index.json
@@ -58,7 +58,7 @@ What things you need to install the software and how to install them
 3. Manually copy the two other library packages to Arduino libraries folder
 4. 3.3v serial cable
 5. and of course a Hacker Warehouse DC25 Badge
-'''
+```
 
 ### Uploading firmware to badge
 
