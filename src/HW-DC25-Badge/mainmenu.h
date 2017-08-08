@@ -146,7 +146,7 @@ const char * const mnuSettings[]PROGMEM  = {
   itmRootSettings,
   itmSettings1,itmSettings2,itmSettings3
   }; 
-const int cntSettings PROGMEM = 3;
+const int cntSettings PROGMEM = 2;
 
 static const char PROGMEM itmBrightness[] = "Brightness Setting";
 static const char PROGMEM itmBrightness1[] = "Uber Low";
